@@ -3,7 +3,7 @@ import torch
 
 from lib.dataset import ThreeDPW
 from lib.models import VIBE
-from lib.core.evaluate import Evaluator
+from lib.core.function import evaluate, validate
 from lib.core.config import parse_args
 from torch.utils.data import DataLoader
 
@@ -41,11 +41,8 @@ def main(cfg):
         num_workers=cfg.NUM_WORKERS,
     )
 
-    Evaluator(
-        model=model,
-        device=cfg.DEVICE,
-        test_loader=test_loader,
-    ).run()
+    evaluation_accumulators = validate(model=model, device=cfg.DEVICE, test_loader=test_loader)
+    evaluate(evaluation_accumulators)
 
 
 if __name__ == '__main__':
