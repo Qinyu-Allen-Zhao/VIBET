@@ -29,7 +29,7 @@ from tqdm import tqdm
 from multi_person_tracker import MPT
 from torch.utils.data import DataLoader
 
-from lib.models.vibe import VIBE_Demo
+from lib.models.vibe import VIBE
 from lib.utils.renderer import Renderer
 from lib.dataset.inference import Inference
 from lib.utils.smooth_pose import smooth_pose
@@ -102,8 +102,8 @@ def main(args):
             del tracking_results[person_id]
 
     # ========= Define VIBE model ========= #
-    model = VIBE_Demo(
-        seqlen=16,
+    model = VIBE(
+        seq_len=16,
         n_layers=2,
         hidden_size=1024,
         add_linear=True,
