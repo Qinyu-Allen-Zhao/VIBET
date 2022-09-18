@@ -72,7 +72,7 @@ def main(cfg):
     generator = VIBE(
         n_layers=cfg.MODEL.TGRU.NUM_LAYERS,
         batch_size=cfg.TRAIN.BATCH_SIZE,
-        seqlen=cfg.DATASET.SEQLEN,
+        seq_len=cfg.DATASET.SEQLEN,
         hidden_size=cfg.MODEL.TGRU.HIDDEN_SIZE,
         pretrained=cfg.TRAIN.PRETRAINED_REGRESSOR,
         add_linear=cfg.MODEL.TGRU.ADD_LINEAR,
