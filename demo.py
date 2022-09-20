@@ -108,6 +108,7 @@ def main(args):
         hidden_size=1024,
         add_linear=True,
         use_residual=True,
+        extract_features=True,
     ).to(device)
 
     # ========= Load pretrained weights ========= #
