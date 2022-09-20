@@ -48,6 +48,7 @@ class AmassReader:
                 theta = np.concatenate([pose, shape], axis=1)
                 vid_name = f'{seq_name}_{subject}_{action[:-4]}'
 
+                self.idx += 1
                 joblib.dump(theta, osp.join(self.output_folder, vid_name))
 
 
