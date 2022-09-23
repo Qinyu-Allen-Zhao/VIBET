@@ -75,7 +75,7 @@ def read_calibration(calib_file, vid_list):
     return Ks, Rs, Ts
 
 
-def read_data_train(dataset_path, debug=False):
+def read_data_train(dataset_path, subject=None):
     h, w = 2048, 2048
     dataset = {
         'vid_name': [],
@@ -90,7 +90,7 @@ def read_data_train(dataset_path, debug=False):
     model = spin.get_pretrained_hmr()
 
     # training data
-    user_list = range(1, 9)
+    user_list = [subject]  # range(1, 9)
     seq_list = range(1, 3)
     vid_list = list(range(3)) + list(range(4, 9))
 
@@ -326,13 +326,14 @@ def read_test_data(dataset_path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir', type=str, help='dataset directory', default='data/mpii_3d')
+    parser.add_argument('--sub', type=int, help='subject', default=1)
     args = parser.parse_args()
 
-    dataset = read_test_data(args.dir)
-    joblib.dump(dataset, osp.join(VIBE_DB_DIR, 'mpii3d_val_db.pt'))
+    # dataset = read_test_data(args.dir)
+    # joblib.dump(dataset, osp.join(VIBE_DB_DIR, 'mpii3d_val_db.pt'))
 
-    dataset = read_data_train(args.dir)
-    joblib.dump(dataset, osp.join(VIBE_DB_DIR, 'mpii3d_train_db.pt'))
+    dataset = read_data_train(args.dir, subject=args.sub)
+    joblib.dump(dataset, osp.join(VIBE_DB_DIR, 'mpii3d_train_%d.pt' % args.sub))
 
 
 
