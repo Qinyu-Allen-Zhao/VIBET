@@ -77,7 +77,7 @@ cfg.LOSS.D_MOTION_LOSS_W = 1.
 
 cfg.MODEL = CN()
 
-cfg.MODEL.TEMPORAL_TYPE = 'gru'
+cfg.MODEL.TEMPORAL_TYPE = 'transformer'  # 'gru'
 
 # GRU model hyperparams
 cfg.MODEL.TGRU = CN()
@@ -86,6 +86,13 @@ cfg.MODEL.TGRU.ADD_LINEAR = False
 cfg.MODEL.TGRU.RESIDUAL = False
 cfg.MODEL.TGRU.HIDDEN_SIZE = 2048
 cfg.MODEL.TGRU.BIDIRECTIONAL = False
+
+# Transformer model hyperparams
+cfg.MODEL.TF = CN()
+cfg.MODEL.TF.D_MODEL = 512
+cfg.MODEL.TF.NHEAD = 8
+cfg.MODEL.TF.NUM_LAYERS = 6
+cfg.MODEL.TF.use_residual = True
 
 
 def get_cfg_defaults():
