@@ -30,14 +30,15 @@ from lib.data_utils.img_utils import normalize_2d_kp, transfrom_keypoints, split
 
 logger = logging.getLogger(__name__)
 
+
 class Dataset2D(Dataset):
-    def __init__(self, seqlen, overlap=0.,
+    def __init__(self, seq_len, overlap=0.,
                  folder=None, dataset_name=None, debug=False):
 
         self.folder = folder
         self.dataset_name = dataset_name
-        self.seqlen = seqlen
-        self.stride = int(seqlen * (1-overlap))
+        self.seqlen = seq_len
+        self.stride = int(seq_len * (1 - overlap))
         self.debug = debug
         self.db = self.load_db()
         self.vid_indices = split_into_chunks(self.db['vid_name'], self.seqlen, self.stride)

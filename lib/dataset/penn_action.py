@@ -19,11 +19,11 @@ from lib.core.config import PENNACTION_DIR
 
 
 class PennAction(Dataset2D):
-    def __init__(self, seqlen, overlap=0.75, debug=False):
+    def __init__(self, seq_len, overlap=0.75, debug=False):
         db_name = 'pennaction'
 
         super(PennAction, self).__init__(
-            seqlen = seqlen,
+            seq_len= seq_len,
             folder=PENNACTION_DIR,
             dataset_name=db_name,
             debug=debug,

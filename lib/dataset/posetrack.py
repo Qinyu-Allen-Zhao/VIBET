@@ -19,10 +19,10 @@ from lib.core.config import POSETRACK_DIR
 
 
 class PoseTrack(Dataset2D):
-    def __init__(self, seqlen, overlap=0.75, folder=None, debug=False):
+    def __init__(self, seq_len, overlap=0.75, folder=None, debug=False):
         db_name = 'posetrack'
         super(PoseTrack, self).__init__(
-            seqlen = seqlen,
+            seq_len= seq_len,
             folder=POSETRACK_DIR,
             dataset_name=db_name,
             debug=debug,
