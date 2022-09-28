@@ -16,10 +16,6 @@
 
 import os
 
-from lib.models.vibet import VIBET
-
-os.environ['PYOPENGL_PLATFORM'] = 'egl'
-
 import torch
 import pprint
 import random
@@ -28,12 +24,14 @@ import torch.backends.cudnn as cudnn
 from torch.utils.tensorboard import SummaryWriter
 
 from lib.core.loss import VIBELoss
-from lib.core.trainer import Trainer
+from lib.core.function import train
 from lib.core.config import parse_args
 from lib.utils.utils import prepare_output_dir
-from lib.models import VIBE, MotionDiscriminator
+from lib.models import VIBE, Discriminator, VIBET
 from lib.dataset.loaders import get_data_loaders
 from lib.utils.utils import create_logger, get_optimizer
+
+os.environ['PYOPENGL_PLATFORM'] = 'egl'
 
 
 def main(cfg):
@@ -113,15 +111,15 @@ def main(cfg):
         momentum=cfg.TRAIN.GEN_MOMENTUM,
     )
 
-    motion_discriminator = MotionDiscriminator(
+    motion_discriminator = Discriminator(
         rnn_size=cfg.TRAIN.MOT_DISCR.HIDDEN_SIZE,
         input_size=69,
         num_layers=cfg.TRAIN.MOT_DISCR.NUM_LAYERS,
         output_size=1,
         feature_pool=cfg.TRAIN.MOT_DISCR.FEATURE_POOL,
-        attention_size=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL !='attention' else cfg.TRAIN.MOT_DISCR.ATT.SIZE,
-        attention_layers=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL !='attention' else cfg.TRAIN.MOT_DISCR.ATT.LAYERS,
-        attention_dropout=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL !='attention' else cfg.TRAIN.MOT_DISCR.ATT.DROPOUT
+        attention_size=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL != 'attention' else cfg.TRAIN.MOT_DISCR.ATT.SIZE,
+        attention_layers=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL != 'attention' else cfg.TRAIN.MOT_DISCR.ATT.LAYERS,
+        attention_dropout=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL != 'attention' else cfg.TRAIN.MOT_DISCR.ATT.DROPOUT
     ).to(cfg.DEVICE)
 
     dis_motion_optimizer = get_optimizer(
@@ -149,7 +147,7 @@ def main(cfg):
     )
 
     # ========= Start Training ========= #
-    Trainer(
+    train(
         data_loaders=data_loaders,
         generator=generator,
         motion_discriminator=motion_discriminator,
@@ -161,14 +159,12 @@ def main(cfg):
         end_epoch=cfg.TRAIN.END_EPOCH,
         device=cfg.DEVICE,
         writer=writer,
-        debug=cfg.DEBUG,
         logdir=cfg.LOGDIR,
         lr_scheduler=lr_scheduler,
         motion_lr_scheduler=motion_lr_scheduler,
         resume=cfg.TRAIN.RESUME,
         num_iters_per_epoch=cfg.TRAIN.NUM_ITERS_PER_EPOCH,
-        debug_freq=cfg.DEBUG_FREQ,
-    ).fit()
+    )
 
 
 if __name__ == '__main__':

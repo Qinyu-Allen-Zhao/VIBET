@@ -4,7 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils import spectral_norm
-from lib.models.attention import SelfAttention
+from lib.models.selfAttention import SelfAttention
+
 
 class Discriminator(nn.Module):
 
@@ -34,7 +35,7 @@ class Discriminator(nn.Module):
 
         if feature_pool == "attention" :
             self.attention = SelfAttention(attention_size=self.attention_size,
-                                       layers=self.attention_layers,
+                                       num_layers=self.attention_layers,
                                        dropout=self.attention_dropout)
 
         self.fc = nn.Linear(linear_size, output_size)

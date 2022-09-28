@@ -3,6 +3,7 @@
 import torch
 from torch import nn
 
+
 class SelfAttention(nn.Module):
     def __init__(self, attention_size,
                  num_layers=1,
