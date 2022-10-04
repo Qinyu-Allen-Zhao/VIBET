@@ -3,8 +3,8 @@
 mkdir -p ./data/vibe_db
 export PYTHONPATH="./:$PYTHONPATH"
 
-# AMASS
-python lib/data_utils/amass_utils.py --dir ./data/amass
+## AMASS
+#python lib/data_utils/amass_utils.py --dir ./data/amass
 
 ## InstaVariety
 ## Comment this if you already downloaded the preprocessed file
