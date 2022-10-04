@@ -48,7 +48,7 @@ def read_data(folder):
 
         kp_2d = anns['joints2D'].transpose((2, 1, 0))
         kp_2d = np.append(kp_2d, np.ones((kp_2d.shape[0], 24, 1)), axis=2)
-        kp_2d = convert_kps(kp_2d, src="syn_videos", dst="spin").reshape((-1, 3))
+        kp_2d = convert_kps(kp_2d, src="syn_videos", dst="spin")
 
         # Compute bounding box
         bbox = np.zeros((nframes, 4))
