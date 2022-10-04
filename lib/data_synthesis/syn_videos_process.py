@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 import os.path as osp
 import scipy.io as scio
+from tqdm import tqdm
 
 from lib.data_utils.kp_utils import convert_kps
 from lib.data_utils.penn_action_utils import calc_kpt_bound
@@ -25,7 +26,7 @@ def read_data(folder):
 
     tot_frames = 0
 
-    for vid in tqdm_enumerate(range(575)):
+    for vid in tqdm(range(575)):
         fname = osp.join(folder, '%d_info.mat' % vid)
         anns = scio.loadmat(fname)
 
