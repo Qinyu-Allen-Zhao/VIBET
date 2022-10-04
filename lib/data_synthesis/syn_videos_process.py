@@ -4,29 +4,22 @@ import sys
 import joblib
 import argparse
 import numpy as np
-import json
 import cv2
 import os.path as osp
 import scipy.io as scio
 
+from lib.data_utils.kp_utils import convert_kps
 from lib.data_utils.penn_action_utils import calc_kpt_bound
 from lib.models import spin
 from lib.core.config import VIBE_DB_DIR
 from lib.utils.utils import tqdm_enumerate
 from lib.data_utils.feature_extractor import extract_features
-from lib.data_utils.kp_utils import get_posetrack_original_kp_names, convert_kps
 
 sys.path.append('.')
 
 
 def read_data(folder):
-    dataset = {
-        'img_name': [],
-        'joints2D': [],
-        'bbox': [],
-        'vid_name': [],
-        'features': [],
-    }
+    dataset = {'img_name': [], 'joints2D': [], 'bbox': [], 'vid_name': [], 'features': [], }
 
     model = spin.get_pretrained_hmr()
 
@@ -51,15 +44,9 @@ def read_data(folder):
             img_paths.append(path)
             nframes += 1
 
-        for i in range(nframes):
-            kp_2d = anns['joints2D'].transpose((2, 1, 0))
-
-        # fix inconsistency
-        n_kp_2d = np.zeros((kp_2d.shape[0], 14, 3))
-        n_kp_2d[:, :12, :2] = kp_2d[:, :-1, :]
-        n_kp_2d[:, 13, :2] = kp_2d[:, 12, :]
-        n_kp_2d[:, :, 2] = 1
-        kp_2d = n_kp_2d
+        kp_2d = anns['joints2D'].transpose((2, 1, 0))
+        kp_2d = np.append(kp_2d, np.ones((kp_2d.shape[0], 24, 1)), axis=2)
+        kp_2d = convert_kps(kp_2d, src="syn_videos", dst="spin").reshape((-1, 3))
 
         # Compute bounding box
         bbox = np.zeros((nframes, 4))
@@ -81,14 +68,7 @@ def read_data(folder):
         dataset['bbox'].append(np.array(bbox))
 
         # Compute features
-        features = extract_features(
-                model,
-                np.array(img_paths),
-                bbox,
-                kp_2d=kp_2d,
-                dataset='spin',
-                debug=False,
-            )
+        features = extract_features(model, np.array(img_paths), bbox, kp_2d=kp_2d, dataset='spin', debug=False, )
 
         assert kp_2d.shape[0] == img_paths.shape[0] == bbox.shape[0]
         tot_frames += nframes

@@ -244,7 +244,6 @@ def read_test_data(dataset_path):
             joints_2d_raw = np.expand_dims(annot2[frame_i, 0, :, :], axis = 0)
             joints_2d_raw = np.append(joints_2d_raw, np.ones((1, 17, 1)), axis=2)
 
-
             joints_2d = convert_kps(joints_2d_raw, src="mpii3d_test", dst="spin").reshape((-1, 3))
 
             # visualize = True
@@ -289,7 +288,6 @@ def read_test_data(dataset_path):
                 vid_uniq_id = "_".join(vid_uniq_id.split("_")[:-1]) + "_seg" + \
                               str(int(dataset['vid_name'][-1].split("_")[-1][3:]) + 1)
                 continue
-
 
             dataset['vid_name'].append(vid_uniq_id)
             dataset['frame_id'].append(img_file.split("/")[-1].split(".")[0])

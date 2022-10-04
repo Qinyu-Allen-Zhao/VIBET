@@ -373,6 +373,34 @@ def get_pennaction_joint_names():
        "rankle"     # 12
    ]
 
+def get_syn_videos_joint_names():
+   return [
+        'base',              # 0
+        'lhip',          # 1
+        'rhip',         # 2
+        'waist',             # 3
+        'lknee',         # 4
+        'rknee',        # 5
+        'uwaist',       # 6
+        'lankle',        # 7
+        'rankle',       # 8
+        'chest',             # 9
+        'ltoe',         # 10
+        'rtoe',        # 11
+        'neck',        # 12
+        'lshoulder',    # 13
+        'rshoulder',   # 14
+        'uneck',       # 15
+        'larm',         # 16
+        'rarm',        # 17
+        'lelbow',       # 18
+        'relbow',      # 19
+        'lwrist',       # 20
+        'rwrist',      # 21
+        'lfinger',      # 22
+        'rfinger'      # 23
+   ]
+
 def get_common_joint_names():
     return [
         "rankle",    # 0  "lankle",    # 0
