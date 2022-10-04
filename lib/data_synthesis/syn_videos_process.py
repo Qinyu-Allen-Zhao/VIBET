@@ -33,7 +33,8 @@ def read_data(folder):
         # Get frames from the videos
         video_cap = cv2.VideoCapture(osp.join(folder, 'syn_videos/%d.mp4' % vid))
         dir = '/content/syn_videos/frame%d' % vid
-        os.makedirs(dir)
+        if not os.path.exists(dir):
+            os.makedirs(dir)
         nframes = 0
         img_paths = []
         while True:
@@ -52,6 +53,8 @@ def read_data(folder):
         # Compute bounding box
         bbox = np.zeros((nframes, 4))
         for fr_id, fr in enumerate(kp_2d):
+            print(fr.shape)
+            print(fr)
             u, d, l, r = calc_kpt_bound(fr)
             center = np.array([(l + r) * 0.5, (u + d) * 0.5], dtype=np.float32)
             c_x, c_y = center[0], center[1]
