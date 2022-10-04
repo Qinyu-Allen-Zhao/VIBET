@@ -28,11 +28,14 @@ def read_data(folder):
 
     for vid in tqdm(range(575)):
         fname = osp.join(folder, '%d_info.mat' % vid)
+        if not os.path.exists(fname):
+            print("Didn't find " + fname)
+            continue
         anns = scio.loadmat(fname)
 
         # Get frames from the videos
         video_cap = cv2.VideoCapture(osp.join(folder, '%d.mp4' % vid))
-        dir = '/content/syn_videos/frame%d' % vid
+        dir = '/content/syn_videos/video%d' % vid
         if not os.path.exists(dir):
             os.makedirs(dir)
         nframes = 0
@@ -45,6 +48,10 @@ def read_data(folder):
             cv2.imwrite(path, frame)
             img_paths.append(path)
             nframes += 1
+
+        if nframes == 0:
+            print("No frames in " + dir)
+            continue
 
         kp_2d = anns['joints2D'].transpose((2, 1, 0))
         kp_2d = np.append(kp_2d, np.ones((kp_2d.shape[0], 24, 1)), axis=2)
