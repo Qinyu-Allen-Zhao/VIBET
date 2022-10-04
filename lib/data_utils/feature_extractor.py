@@ -24,13 +24,15 @@ from lib.utils.vis import batch_visualize_preds
 from lib.data_utils.img_utils import get_single_image_crop, convert_cvimg_to_tensor
 
 
-def extract_features(model, video, bbox, debug=False, batch_size=200, kp_2d=None, dataset=None, scale=1.3):
+def extract_features(model, video, bbox, debug=False, batch_size=200,
+                     kp_2d=None, dataset=None, scale=1.3, random_mask=False):
     '''
     :param model: pretrained HMR model, use lib/models/hmr.py:get_pretrained_hmr()
     :param video: video filename, torch.Tensor in shape (num_frames,W,H,C)
     :param bbox: bbox array in shape (T,4)
     :param debug: boolean, true if you want to debug HMR predictions
     :param batch_size: batch size for HMR input
+    :param random_mask: Randomly mask some parts of the image to augment data
     :return: features: resnet50 features np.ndarray -> shape (num_frames, 4)
     '''
     device = 'cuda'
@@ -91,7 +93,7 @@ def extract_features(model, video, bbox, debug=False, batch_size=200, kp_2d=None
                 del pred, images
             else:
                 preds = model(images)
-                dataset = 'spin' # dataset if dataset else 'common'
+                dataset = 'spin'  # dataset if dataset else 'common'
                 result_image = batch_visualize_preds(
                     images,
                     preds[-1],
