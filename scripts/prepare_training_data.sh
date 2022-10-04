@@ -21,3 +21,6 @@ python lib/data_utils/posetrack_utils.py --dir ./data/posetrack
 
 # PennAction
 python lib/data_utils/penn_action_utils.py --dir ./data/penn_action
+
+# Synthesis videos
+python lib/data_synthesis/syn_videos_process.py --dir ./data/syn_videos
