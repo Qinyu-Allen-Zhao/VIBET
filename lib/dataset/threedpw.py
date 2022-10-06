@@ -18,7 +18,7 @@ from lib.dataset import Dataset3D
 from lib.core.config import THREEDPW_DIR
 
 class ThreeDPW(Dataset3D):
-    def __init__(self, set, seqlen, overlap=0.75, debug=False):
+    def __init__(self, set, seq_len, overlap=0.75, debug=False):
         db_name = '3dpw'
 
         # during testing we don't need data augmentation
@@ -29,7 +29,7 @@ class ThreeDPW(Dataset3D):
         super(ThreeDPW, self).__init__(
             set=set,
             folder=THREEDPW_DIR,
-            seqlen=seqlen,
+            seq_len=seq_len,
             overlap=overlap,
             dataset_name=db_name,
             debug=debug,

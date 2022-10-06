@@ -32,7 +32,7 @@ def main(cfg):
         print(f'{cfg.TRAIN.PRETRAINED} is not a pretrained model!!!!')
         exit()
 
-    test_db = ThreeDPW(set='test', seqlen=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
+    test_db = ThreeDPW(set='test', seq_len=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
 
     test_loader = DataLoader(
         dataset=test_db,

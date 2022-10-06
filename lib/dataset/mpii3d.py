@@ -19,7 +19,7 @@ from lib.core.config import MPII3D_DIR
 
 
 class MPII3D(Dataset3D):
-    def __init__(self, set, seqlen, overlap=0, debug=False):
+    def __init__(self, set, seq_len, overlap=0, debug=False):
         db_name = 'mpii3d'
 
         # during testing we don't need data augmentation
@@ -30,7 +30,7 @@ class MPII3D(Dataset3D):
         super(MPII3D, self).__init__(
             set = set,
             folder=MPII3D_DIR,
-            seqlen=seqlen,
+            seq_len=seq_len,
             overlap=overlap,
             dataset_name=db_name,
             debug=debug,

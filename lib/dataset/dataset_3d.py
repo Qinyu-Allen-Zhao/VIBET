@@ -30,16 +30,16 @@ from lib.data_utils.img_utils import normalize_2d_kp, transfrom_keypoints, split
 logger = logging.getLogger(__name__)
 
 class Dataset3D(Dataset):
-    def __init__(self, set, seqlen, overlap=0., folder=None, dataset_name=None, debug=False):
+    def __init__(self, set, seq_len, overlap=0., folder=None, dataset_name=None, debug=False):
 
         self.folder = folder
         self.set = set
         self.dataset_name = dataset_name
-        self.seqlen = seqlen
-        self.stride = int(seqlen * (1-overlap))
+        self.seq_len = seq_len
+        self.stride = int(seq_len * (1 - overlap))
         self.debug = debug
         self.db = self.load_db()
-        self.vid_indices = split_into_chunks(self.db['vid_name'], self.seqlen, self.stride)
+        self.vid_indices = split_into_chunks(self.db['vid_name'], self.seq_len, self.stride)
 
     def __len__(self):
         return len(self.vid_indices)
@@ -79,39 +79,39 @@ class Dataset3D(Dataset):
             else:
                 kp_3d = convert_kps(self.db['joints3D'][start_index:end_index + 1], src='spin', dst='common')
 
-        kp_2d_tensor = np.ones((self.seqlen, 49, 3), dtype=np.float16)
+        kp_2d_tensor = np.ones((self.seq_len, 49, 3), dtype=np.float16)
         nj = 14 if not is_train else 49
-        kp_3d_tensor = np.zeros((self.seqlen, nj, 3), dtype=np.float16)
+        kp_3d_tensor = np.zeros((self.seq_len, nj, 3), dtype=np.float16)
 
 
         if self.dataset_name == '3dpw':
             pose  = self.db['pose'][start_index:end_index+1]
             shape = self.db['shape'][start_index:end_index+1]
-            w_smpl = torch.ones(self.seqlen).float()
-            w_3d = torch.ones(self.seqlen).float()
+            w_smpl = torch.ones(self.seq_len).float()
+            w_3d = torch.ones(self.seq_len).float()
         elif self.dataset_name == 'h36m':
             if not is_train:
                 pose = np.zeros((kp_2d.shape[0], 72))
                 shape = np.zeros((kp_2d.shape[0], 10))
-                w_smpl = torch.zeros(self.seqlen).float()
-                w_3d = torch.ones(self.seqlen).float()
+                w_smpl = torch.zeros(self.seq_len).float()
+                w_3d = torch.ones(self.seq_len).float()
             else:
                 pose = self.db['pose'][start_index:end_index + 1]
                 shape = self.db['shape'][start_index:end_index + 1]
-                w_smpl = torch.ones(self.seqlen).float()
-                w_3d = torch.ones(self.seqlen).float()
+                w_smpl = torch.ones(self.seq_len).float()
+                w_3d = torch.ones(self.seq_len).float()
         elif self.dataset_name == 'mpii3d':
             pose = np.zeros((kp_2d.shape[0], 72))
             shape = np.zeros((kp_2d.shape[0], 10))
-            w_smpl = torch.zeros(self.seqlen).float()
-            w_3d = torch.ones(self.seqlen).float()
+            w_smpl = torch.zeros(self.seq_len).float()
+            w_3d = torch.ones(self.seq_len).float()
 
         bbox = self.db['bbox'][start_index:end_index + 1]
         input = torch.from_numpy(self.db['features'][start_index:end_index+1]).float()
 
-        theta_tensor = np.zeros((self.seqlen, 85), dtype=np.float16)
+        theta_tensor = np.zeros((self.seq_len, 85), dtype=np.float16)
 
-        for idx in range(self.seqlen):
+        for idx in range(self.seq_len):
             # crop image and transform 2d keypoints
             kp_2d[idx,:,:2], trans = transfrom_keypoints(
                 kp_2d=kp_2d[idx,:,:2],

@@ -37,11 +37,11 @@ class Dataset2D(Dataset):
 
         self.folder = folder
         self.dataset_name = dataset_name
-        self.seqlen = seq_len
+        self.seq_len = seq_len
         self.stride = int(seq_len * (1 - overlap))
         self.debug = debug
         self.db = self.load_db()
-        self.vid_indices = split_into_chunks(self.db['vid_name'], self.seqlen, self.stride)
+        self.vid_indices = split_into_chunks(self.db['vid_name'], self.seq_len, self.stride)
 
 
     def __len__(self):
@@ -69,14 +69,14 @@ class Dataset2D(Dataset):
         kp_2d = self.db['joints2D'][start_index:end_index+1]
         if self.dataset_name != 'posetrack':
             kp_2d = convert_kps(kp_2d, src=self.dataset_name, dst='spin')
-        kp_2d_tensor = np.ones((self.seqlen, 49, 3), dtype=np.float16)
+        kp_2d_tensor = np.ones((self.seq_len, 49, 3), dtype=np.float16)
 
         bbox  = self.db['bbox'][start_index:end_index+1]
 
         input = torch.from_numpy(self.db['features'][start_index:end_index+1]).float()
 
 
-        for idx in range(self.seqlen):
+        for idx in range(self.seq_len):
             # crop image and transform 2d keypoints
             kp_2d[idx,:,:2], trans = transfrom_keypoints(
                 kp_2d=kp_2d[idx,:,:2],

@@ -24,13 +24,13 @@ from lib.core.config import VIBE_DB_DIR
 from lib.data_utils.img_utils import split_into_chunks
 
 class AMASS(Dataset):
-    def __init__(self, seqlen):
-        self.seqlen = seqlen
+    def __init__(self, seq_len):
+        self.seq_len = seq_len
 
-        self.stride = seqlen
+        self.stride = seq_len
 
         self.db = self.load_db()
-        self.vid_indices = split_into_chunks(self.db['vid_name'], self.seqlen, self.stride)
+        self.vid_indices = split_into_chunks(self.db['vid_name'], self.seq_len, self.stride)
         del self.db['vid_name']
         print(f'AMASS dataset number of videos: {len(self.vid_indices)}')
 

@@ -23,14 +23,14 @@ def get_data_loaders(cfg):
     def get_2d_datasets(dataset_names):
         datasets = []
         for dataset_name in dataset_names:
-            db = eval(dataset_name)(seqlen=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
+            db = eval(dataset_name)(seq_len=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
             datasets.append(db)
         return ConcatDataset(datasets)
 
     def get_3d_datasets(dataset_names):
         datasets = []
         for dataset_name in dataset_names:
-            db = eval(dataset_name)(set='train', seqlen=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
+            db = eval(dataset_name)(set='train', seq_len=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
             datasets.append(db)
         return ConcatDataset(datasets)
 
@@ -60,7 +60,7 @@ def get_data_loaders(cfg):
     )
 
     # ===== Motion Discriminator dataset =====
-    motion_disc_db = AMASS(seqlen=cfg.DATASET.SEQLEN)
+    motion_disc_db = AMASS(seq_len=cfg.DATASET.SEQLEN)
 
     motion_disc_loader = DataLoader(
         dataset=motion_disc_db,

@@ -28,15 +28,15 @@ from lib.data_utils.img_utils import normalize_2d_kp, split_into_chunks
 logger = logging.getLogger(__name__)
 
 class Insta(Dataset):
-    def __init__(self, seqlen, overlap=0., debug=False):
-        self.seqlen = seqlen
-        self.stride = int(seqlen * (1-overlap))
+    def __init__(self, seq_len, overlap=0., debug=False):
+        self.seq_len = seq_len
+        self.stride = int(seq_len * (1 - overlap))
 
         self.h5_file = osp.join(VIBE_DB_DIR, 'insta_train_db.h5')
 
         with h5py.File(self.h5_file, 'r') as db:
             self.db = db
-            self.vid_indices = split_into_chunks(self.db['vid_name'], self.seqlen, self.stride)
+            self.vid_indices = split_into_chunks(self.db['vid_name'], self.seq_len, self.stride)
 
         print(f'InstaVariety number of dataset objects {self.__len__()}')
 
@@ -54,7 +54,7 @@ class Insta(Dataset):
 
             kp_2d = self.db['joints2D'][start_index:end_index + 1]
             kp_2d = convert_kps(kp_2d, src='insta', dst='spin')
-            kp_2d_tensor = np.ones((self.seqlen, 49, 3), dtype=np.float16)
+            kp_2d_tensor = np.ones((self.seq_len, 49, 3), dtype=np.float16)
 
 
             input = torch.from_numpy(self.db['features'][start_index:end_index+1]).float()
@@ -63,7 +63,7 @@ class Insta(Dataset):
             frame_id = self.db['frame_id'][start_index:end_index + 1].astype(str)
             instance_id = np.array([v.decode('ascii') + f for v, f in zip(vid_name, frame_id)])
 
-        for idx in range(self.seqlen):
+        for idx in range(self.seq_len):
             kp_2d[idx,:,:2] = normalize_2d_kp(kp_2d[idx,:,:2], 224)
             kp_2d_tensor[idx] = kp_2d[idx]
 
