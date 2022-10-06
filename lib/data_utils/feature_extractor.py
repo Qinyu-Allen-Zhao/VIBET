@@ -121,8 +121,10 @@ def extract_features(model, video, bbox, debug=False, batch_size=200,
 def create_random_mask(images, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0):
     img = images[0]
 
+    # Randomly generate one mask
     i, j, h, w, v = random_mask_for_one_image(img, ratio, scale, value)
 
+    # Mask all images in the video segment
     for n, img in enumerate(images):
         images[n] = F.erase(img, i, j, h, w, v)
 
