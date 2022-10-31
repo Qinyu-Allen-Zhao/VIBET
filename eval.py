@@ -27,7 +27,7 @@ def main(cfg):
         best_performance = checkpoint['performance']
         model.load_state_dict(checkpoint['gen_state_dict'])
         # print(f"Loaded pretrained model from {cfg.TRAIN.PRETRAINED}")
-        print(f'Performance on 3DPW test set {best_performance}')
+        # print(f'Performance on 3DPW test set {best_performance}')
     else:
         print(f'{cfg.TRAIN.PRETRAINED} is not a pretrained model!!!!')
         exit()
