@@ -26,8 +26,7 @@ def main(cfg):
         checkpoint = torch.load(cfg.TRAIN.PRETRAINED)
         best_performance = checkpoint['performance']
         model.load_state_dict(checkpoint['gen_state_dict'])
-        print('111')
-        print(f'Loaded pretrained model from {cfg.TRAIN.PRETRAINED}')
+        print(f"Loaded pretrained model from {cfg.TRAIN.PRETRAINED}")
         print(f'Performance on 3DPW test set {best_performance}')
     else:
         print(f'{cfg.TRAIN.PRETRAINED} is not a pretrained model!!!!')
