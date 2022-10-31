@@ -93,7 +93,7 @@ cfg.MODEL.TF = CN()
 cfg.MODEL.TF.D_MODEL = 512
 cfg.MODEL.TF.NHEAD = 8
 cfg.MODEL.TF.NUM_LAYERS = 6
-cfg.MODEL.TF.use_residual = True
+cfg.MODEL.TF.RESIDUAL = True
 
 
 def get_cfg_defaults():

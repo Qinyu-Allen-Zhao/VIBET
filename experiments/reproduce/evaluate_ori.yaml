@@ -15,7 +15,7 @@ LOSS:
   POSE_W: 60.0
   D_MOTION_LOSS_W: 0.5
 TRAIN:
-  BATCH_SIZE: 32
+  BATCH_SIZE: 16
   NUM_ITERS_PER_EPOCH: 500
   PRETRAINED: 'data/vibe_data/vibe_model_w_3dpw.pth.tar'
   PRETRAINED_REGRESSOR: 'data/vibe_data/spin_model_checkpoint.pth.tar'
