@@ -73,8 +73,8 @@ def compute_error_verts(pred_verts, target_verts=None, target_theta=None):
         pose = torch.from_numpy(target_theta[:,3:75]).to(device)
 
         target_verts = []
-        b_ = torch.split(betas, 5000)
-        p_ = torch.split(pose, 5000)
+        b_ = torch.split(betas, 500)
+        p_ = torch.split(pose, 500)
 
         for b,p in zip(b_,p_):
             output = smpl(betas=b, body_pose=p[:, 3:], global_orient=p[:, :3], pose2rot=True)
