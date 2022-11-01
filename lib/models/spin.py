@@ -60,6 +60,7 @@ class HMR(nn.Module):
     """
     SMPL Iterative Regressor with ResNet50 backbone
     """
+
     def __init__(self, block, layers, smpl_mean_params):
         self.inplanes = 64
         super(HMR, self).__init__()
@@ -107,6 +108,18 @@ class HMR(nn.Module):
         self.register_buffer('init_shape', init_shape)
         self.register_buffer('init_cam', init_cam)
 
+        self.extractor = nn.Sequential(
+            self.conv1,
+            self.bn1,
+            self.relu,
+            self.maxpool,
+            self.layer1,
+            self.layer2,
+            self.layer3,
+            self.layer4,
+            self.avgpool
+        )
+
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
@@ -125,19 +138,24 @@ class HMR(nn.Module):
         return nn.Sequential(*layers)
 
     def feature_extractor(self, x):
-
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-        x = self.maxpool(x)
-
-        x1 = self.layer1(x)
-        x2 = self.layer2(x1)
-        x3 = self.layer3(x2)
-        x4 = self.layer4(x3)
-
-        xf = self.avgpool(x4)
+        xf = self.extractor(x)
         xf = xf.view(xf.size(0), -1)
+        return xf
+
+    def aug_feature_extractor(self, x):
+        xf = self.extractor(x)
+        bs = xf.size(0)
+
+        x2 = self.fc1(xf)
+        x2 = self.drop1(x2)
+        x2 = self.fc2(x2)
+        x2 = self.drop2(x2)
+        pose = self.decpose(x2).view(bs, -1)
+        shape = self.decshape(x2).view(bs, -1)
+        cam = self.deccam(x2).view(bs, -1)
+
+        xf = xf.view(bs, -1)
+        xf = torch.cat([xf, pose, shape, cam], 1)
         return xf
 
     def forward(self, x, init_pose=None, init_shape=None, init_cam=None, n_iter=3, return_features=False):
@@ -237,8 +255,6 @@ class Regressor(nn.Module):
         self.register_buffer('init_shape', init_shape)
         self.register_buffer('init_cam', init_cam)
 
-
-
     def forward(self, x, init_pose=None, init_shape=None, init_cam=None, n_iter=3, J_regressor=None):
         batch_size = x.shape[0]
 
@@ -284,11 +300,11 @@ class Regressor(nn.Module):
         pose = rotation_matrix_to_angle_axis(pred_rotmat.reshape(-1, 3, 3)).reshape(-1, 72)
 
         output = [{
-            'theta'  : torch.cat([pred_cam, pose, pred_shape], dim=1),
-            'verts'  : pred_vertices,
-            'kp_2d'  : pred_keypoints_2d,
-            'kp_3d'  : pred_joints,
-            'rotmat' : pred_rotmat
+            'theta': torch.cat([pred_cam, pose, pred_shape], dim=1),
+            'verts': pred_vertices,
+            'kp_2d': pred_keypoints_2d,
+            'kp_3d': pred_joints,
+            'rotmat': pred_rotmat
         }]
         return output
 
@@ -313,7 +329,8 @@ def projection(pred_joints, pred_camera):
     batch_size = pred_joints.shape[0]
     camera_center = torch.zeros(batch_size, 2)
     pred_keypoints_2d = perspective_projection(pred_joints,
-                                               rotation=torch.eye(3).unsqueeze(0).expand(batch_size, -1, -1).to(pred_joints.device),
+                                               rotation=torch.eye(3).unsqueeze(0).expand(batch_size, -1, -1).to(
+                                                   pred_joints.device),
                                                translation=pred_cam_t,
                                                focal_length=5000.,
                                                camera_center=camera_center)
@@ -335,17 +352,17 @@ def perspective_projection(points, rotation, translation,
     """
     batch_size = points.shape[0]
     K = torch.zeros([batch_size, 3, 3], device=points.device)
-    K[:,0,0] = focal_length
-    K[:,1,1] = focal_length
-    K[:,2,2] = 1.
-    K[:,:-1, -1] = camera_center
+    K[:, 0, 0] = focal_length
+    K[:, 1, 1] = focal_length
+    K[:, 2, 2] = 1.
+    K[:, :-1, -1] = camera_center
 
     # Transform points
     points = torch.einsum('bij,bkj->bki', rotation, points)
     points = points + translation.unsqueeze(1)
 
     # Apply perspective distortion
-    projected_points = points / points[:,:,-1].unsqueeze(-1)
+    projected_points = points / points[:, :, -1].unsqueeze(-1)
 
     # Apply camera intrinsics
     projected_points = torch.einsum('bij,bkj->bki', K, projected_points)

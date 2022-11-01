@@ -26,7 +26,8 @@ from lib.data_utils.img_utils import get_single_image_crop, convert_cvimg_to_ten
 
 
 def extract_features(model, video, bbox, debug=False, batch_size=200,
-                     kp_2d=None, dataset=None, scale=1.3, random_mask=False):
+                     kp_2d=None, dataset=None, scale=1.3, random_mask=False,
+                     aug_features=False):
     '''
     :param model: pretrained HMR model, use lib/models/hmr.py:get_pretrained_hmr()
     :param video: video filename, torch.Tensor in shape (num_frames,W,H,C)
@@ -34,6 +35,7 @@ def extract_features(model, video, bbox, debug=False, batch_size=200,
     :param debug: boolean, true if you want to debug HMR predictions
     :param batch_size: batch size for HMR input
     :param random_mask: Randomly mask some parts of the image to augment data
+    :param aug_features: Augment features by combining features and SMPL parameters
     :return: features: resnet50 features np.ndarray -> shape (num_frames, 4)
     '''
     device = 'cuda'
@@ -91,7 +93,8 @@ def extract_features(model, video, bbox, debug=False, batch_size=200,
                 create_random_mask(images)
 
             if not debug:
-                pred = model.feature_extractor(images)
+                pred = model.aug_feature_extractor(images) \
+                    if aug_features else model.feature_extractor(images)
                 features.append(pred.cpu())
                 del pred, images
             else:
