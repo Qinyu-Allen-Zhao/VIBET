@@ -4,6 +4,12 @@ import torch
 from torch import nn
 
 
+def init_weights(m):
+    if type(m) == nn.Linear:
+        torch.nn.init.uniform_(m.weight, -0.1, 0.1)
+        m.bias.data.fill_(0.01)
+
+
 class SelfAttention(nn.Module):
     def __init__(self, attention_size,
                  num_layers=1,
@@ -25,13 +31,8 @@ class SelfAttention(nn.Module):
         modules.append(nn.Dropout(dropout))
 
         self.attention = nn.Sequential(*modules)
-        self.attention.apply(self.init_weights)
+        self.attention.apply(init_weights)
         self.softmax = nn.Softmax(dim=-1)
-
-    def init_weights(m):
-        if type(m) == nn.Linear:
-            torch.nn.init.uniform_(m.weight, -0.1, 0.1)
-            m.bias.data.fill_(0.01)
 
     def forward(self, inputs):
 
