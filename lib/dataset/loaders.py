@@ -70,7 +70,7 @@ def get_data_loaders(cfg):
     )
 
     # ===== Evaluation dataset =====
-    valid_db = eval(cfg.TRAIN.DATASET_EVAL)(set='val', seqlen=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
+    valid_db = eval(cfg.TRAIN.DATASET_EVAL)(set='val', seq_len=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
 
     valid_loader = DataLoader(
         dataset=valid_db,
