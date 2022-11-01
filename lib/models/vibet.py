@@ -36,6 +36,43 @@ class TemporalEncoder(nn.Module):
         return y
 
 
+class SpatialEncoder(nn.Module):
+    def __init__(
+            self,
+            input_size=256,
+            hidden_layer=256,
+            num_layers=3,
+            output_size=64,
+    ):
+        super(SpatialEncoder, self).__init__()
+        self.num_layers = num_layers
+
+        self.layers = nn.Sequential(
+            nn.Linear(input_size, hidden_layer, bias=True),
+            nn.Dropout(0.25),
+            nn.LeakyReLU(),
+            nn.BatchNorm1d(hidden_layer),
+        )
+
+        self.block = nn.Sequential(
+            nn.Linear(hidden_layer, hidden_layer, bias=True),
+            nn.Dropout(0.25),
+            nn.LeakyReLU(),
+            nn.BatchNorm1d(hidden_layer),
+        )
+
+        self.output_layer = nn.Linear(hidden_layer, output_size, bias=True)
+
+    def forward(self, x):
+        x = self.layers(x)
+        for _ in range(self.num_layers):
+            res = self.block(x)
+            x += res
+
+        x = self.output_layer(x)
+        return x
+
+
 class VIBET(nn.Module):
     def __init__(
             self,
