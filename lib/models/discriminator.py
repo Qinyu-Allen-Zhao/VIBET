@@ -33,7 +33,7 @@ class Discriminator(nn.Module):
 
         linear_size = self.rnn_size if not feature_pool == "concat" else self.rnn_size * 2
 
-        if feature_pool == "attention" :
+        if feature_pool == "attention":
             self.attention = SelfAttention(attention_size=self.attention_size,
                                        num_layers=self.attention_layers,
                                        dropout=self.attention_dropout)
