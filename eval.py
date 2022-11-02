@@ -43,7 +43,7 @@ def main(cfg):
         )
 
         evaluation_accumulators = validate(model=model, device=cfg.DEVICE, test_loader=test_loader)
-        evaluate(evaluation_accumulators)
+        evaluate(evaluation_accumulators, dataset)
 
 
 if __name__ == '__main__':

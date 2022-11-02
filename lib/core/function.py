@@ -69,7 +69,7 @@ def validate(model, device, test_loader):
     return evaluation_accumulators
 
 
-def evaluate(evaluation_accumulators):
+def evaluate(evaluation_accumulators, dataset='ThreeDPW'):
     for k, v in evaluation_accumulators.items():
         evaluation_accumulators[k] = np.vstack(v)
 
@@ -102,7 +102,10 @@ def evaluate(evaluation_accumulators):
     accel_err = np.mean(compute_error_accel(joints_pred=pred_j3ds, joints_gt=target_j3ds)) * m2mm
     mpjpe = np.mean(errors) * m2mm
     pa_mpjpe = np.mean(errors_pa) * m2mm
-    pck = compute_pck(pred_j3ds, target_j3ds, [34, 27])
+    if dataset == 'MPII3D':
+        pck = compute_pck(pred_j3ds, target_j3ds, [34, 27])
+    else:
+        pck = [-1]
 
     eval_dict = {
         'mpjpe': mpjpe,
