@@ -30,24 +30,27 @@ class PositionalEncoding(nn.Module):
 class TemporalEncoder(nn.Module):
     def __init__(
             self,
+            seq_len=32,
             d_model=512,
             nhead=8,
             num_layers=6
     ):
         super(TemporalEncoder, self).__init__()
-        self.pos_encoder = PositionalEncoding(d_model, dropout=0.1)
+        self.pos_encoder = PositionalEncoding(d_model, dropout=0.1, max_len=seq_len)
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead)
         self.transformer_encoder = nn.TransformerEncoder(
             self.encoder_layer,
             num_layers=num_layers
         )
-        self.decoder = nn.Linear(d_model, 2048)
 
     def forward(self, x):
+        x = x.permute(1, 0, 2)  # => (seq, batch, feature)
+
         out = self.pos_encoder(x)
         out = self.transformer_encoder(out)
-        out = self.decoder(out)
         out += x  # residual learning
+
+        out = out.permute(1, 0, 2)
         return out
 
 
@@ -106,6 +109,7 @@ class VIBET(nn.Module):
         self.batch_size = batch_size
 
         self.encoder = TemporalEncoder(
+            seq_len=seq_len,
             d_model=d_model,
             nhead=nhead,
             num_layers=num_layers,
