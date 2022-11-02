@@ -307,6 +307,8 @@ def compute_pck(dt_tensor, gt_tensor):
 
     # compute dist
     dist = np.sqrt(np.sum(np.square(dt - gt), 2))
+    print(dist[0])
+    print(dist[0] * m2mm)
 
     # compute pck
     pck = np.zeros([kpts_num + 1])
@@ -315,6 +317,6 @@ def compute_pck(dt_tensor, gt_tensor):
 
     # compute average pck
     print(pck)
-    pck[-1] = 100 * np.mean(dist <= alpha)
+    pck[-1] = 100 * np.mean(dist * m2mm <= pck_thre)
 
     return pck
