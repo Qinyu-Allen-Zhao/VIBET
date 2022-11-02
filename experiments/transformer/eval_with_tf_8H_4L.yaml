@@ -2,9 +2,9 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'vibe'
+EXP_NAME: 'vibet'
 OUTPUT_DIR: 'results/vibe_tests'
-NUM_WORKERS: 8
+NUM_WORKERS: 1
 SEED_VALUE: -1
 DATASET:
   SEQLEN: 16
@@ -15,9 +15,9 @@ LOSS:
   POSE_W: 60.0
   D_MOTION_LOSS_W: 0.5
 TRAIN:
-  BATCH_SIZE: 16
+  BATCH_SIZE: 32
   NUM_ITERS_PER_EPOCH: 500
-  PRETRAINED: 'data/vibe_data/vibe_model_w_3dpw.pth.tar'
+  PRETRAINED: 'results/vibe_tests/tf_8H_4L/model_best.pth.tar'
   PRETRAINED_REGRESSOR: 'data/vibe_data/spin_model_checkpoint.pth.tar'
   RESUME: ''
   START_EPOCH: 0
@@ -27,9 +27,9 @@ TRAIN:
   DATASETS_2D:
     - 'Insta'
 #    - 'PoseTrack'
-#    - 'PennAction'
+    - 'PennAction'
   DATASETS_3D:
-#    - 'ThreeDPW'
+    - 'ThreeDPW'
     - 'MPII3D'
   DATASET_EVAL: 'ThreeDPW'
   GEN_LR: 0.00005
@@ -52,9 +52,8 @@ TEST:
     - 'MPII3D'
 MODEL:
   TEMPORAL_TYPE: 'gru'
-  TGRU:
-    NUM_LAYERS: 2
-    ADD_LINEAR: true
-    RESIDUAL: true
-    BIDIRECTIONAL: false
-    HIDDEN_SIZE: 1024
+  TF:
+    D_MODEL : 2048
+    NHEAD : 8
+    NUM_LAYERS : 4
+    RESIDUAL : true
