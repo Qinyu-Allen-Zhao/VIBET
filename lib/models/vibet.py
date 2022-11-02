@@ -73,7 +73,6 @@ class VIBET(nn.Module):
             d_model=512,
             nhead=8,
             num_layers=6,
-            use_residual=True,
             extract_features=False,
             pretrained=osp.join(VIBE_DATA_DIR, 'spin_model_checkpoint.pth.tar'),
     ):
@@ -87,7 +86,6 @@ class VIBET(nn.Module):
             d_model=d_model,
             nhead=nhead,
             num_layers=num_layers,
-            use_residual=use_residual,
         )
 
         # From scratch to evaluate a video
