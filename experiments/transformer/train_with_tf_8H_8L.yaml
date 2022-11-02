@@ -50,6 +50,6 @@ MODEL:
   TEMPORAL_TYPE: 'transformer'
   TF:
     D_MODEL : 2048
-    NHEAD : 12
+    NHEAD : 8
     NUM_LAYERS : 8
     RESIDUAL : true
