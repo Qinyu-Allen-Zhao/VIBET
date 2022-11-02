@@ -1,7 +1,7 @@
 import os
 import torch
 
-from lib.dataset import ThreeDPW
+from lib.dataset import ThreeDPW, MPII3D, SynVideos
 from lib.models import VIBE
 from lib.core.function import evaluate, validate
 from lib.core.config import parse_args
