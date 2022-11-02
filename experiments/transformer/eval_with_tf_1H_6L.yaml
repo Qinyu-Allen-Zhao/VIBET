@@ -2,7 +2,7 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'tf_16H_8L'
+EXP_NAME: 'tf_1H_6L'
 OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 1
 SEED_VALUE: -1
@@ -17,11 +17,11 @@ LOSS:
 TRAIN:
   BATCH_SIZE: 32
   NUM_ITERS_PER_EPOCH: 500
-  PRETRAINED: ''
+  PRETRAINED: 'results/vibe_tests/tf_1H_6L/model_best.pth.tar'
   PRETRAINED_REGRESSOR: 'data/vibe_data/spin_model_checkpoint.pth.tar'
   RESUME: ''
   START_EPOCH: 0
-  END_EPOCH: 40
+  END_EPOCH: 30
   LR_PATIENCE: 5
   DATA_2D_RATIO: 0.6
   DATASETS_2D:
@@ -46,10 +46,14 @@ TRAIN:
       LAYERS: 3
       SIZE: 1024
       DROPOUT: 0.2
+TEST:
+  DATASETS:
+    - 'ThreeDPW'
+    - 'MPII3D'
 MODEL:
   TEMPORAL_TYPE: 'transformer'
   TF:
     D_MODEL : 2048
-    NHEAD : 16
-    NUM_LAYERS : 8
+    NHEAD : 1
+    NUM_LAYERS : 6
     RESIDUAL : true

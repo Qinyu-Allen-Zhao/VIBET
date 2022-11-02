@@ -2,7 +2,7 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'tf_4H_2L'
+EXP_NAME: 'tf_1H_6L'
 OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 1
 SEED_VALUE: -1
@@ -50,6 +50,6 @@ MODEL:
   TEMPORAL_TYPE: 'transformer'
   TF:
     D_MODEL : 2048
-    NHEAD : 4
-    NUM_LAYERS : 2
+    NHEAD : 1
+    NUM_LAYERS : 6
     RESIDUAL : true

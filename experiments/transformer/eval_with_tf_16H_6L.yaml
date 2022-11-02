@@ -2,7 +2,7 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'vibet'
+EXP_NAME: 'tf_16H_6L'
 OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 1
 SEED_VALUE: -1
@@ -17,7 +17,7 @@ LOSS:
 TRAIN:
   BATCH_SIZE: 32
   NUM_ITERS_PER_EPOCH: 500
-  PRETRAINED: 'results/vibe_tests/tf_16H_12L/model_best.pth.tar'
+  PRETRAINED: 'results/vibe_tests/tf_16H_6L/model_best.pth.tar'
   PRETRAINED_REGRESSOR: 'data/vibe_data/spin_model_checkpoint.pth.tar'
   RESUME: ''
   START_EPOCH: 0
@@ -55,5 +55,5 @@ MODEL:
   TF:
     D_MODEL : 2048
     NHEAD : 16
-    NUM_LAYERS : 8
+    NUM_LAYERS : 6
     RESIDUAL : true
