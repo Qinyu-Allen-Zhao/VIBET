@@ -315,6 +315,7 @@ def compute_pck(dt_tensor, gt_tensor, refer_kpts):
         pck[kpt_idx] = 100 * np.mean(dist[:, kpt_idx] <= alpha)
 
     # compute average pck
+    print(pck)
     pck[-1] = 100 * np.mean(dist <= alpha)
 
     return pck
