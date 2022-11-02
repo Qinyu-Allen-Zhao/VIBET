@@ -23,8 +23,8 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pe', pe)
 
     def forward(self, x):
-        x = x + self.pe[:x.size()[0], :]
-        return self.dropout(x)
+        y = x + self.pe[:x.size()[0], :]
+        return self.dropout(y)
 
 
 class TemporalEncoder(nn.Module):
