@@ -103,7 +103,7 @@ def evaluate(evaluation_accumulators, dataset='ThreeDPW'):
     mpjpe = np.mean(errors) * m2mm
     pa_mpjpe = np.mean(errors_pa) * m2mm
     if dataset == 'MPII3D':
-        pck = compute_pck(pred_j3ds, target_j3ds, [34, 27])
+        pck = compute_pck(pred_j3ds, target_j3ds, [9, 2])
     else:
         pck = [-1]
 
