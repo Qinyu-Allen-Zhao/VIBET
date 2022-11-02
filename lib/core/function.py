@@ -9,7 +9,7 @@ from progress.bar import Bar
 
 from lib.core.config import VIBE_DATA_DIR
 from lib.utils.eval_utils import compute_accel, compute_error_accel, \
-    compute_error_verts, batch_compute_similarity_transform_torch
+    compute_error_verts, batch_compute_similarity_transform_torch, compute_pck
 from lib.utils.utils import move_dict_to_device, AverageMeter
 
 
@@ -91,6 +91,7 @@ def evaluate(evaluation_accumulators):
     errors = torch.sqrt(((pred_j3ds - target_j3ds) ** 2).sum(dim=-1)).mean(dim=-1).cpu().numpy()
     S1_hat = batch_compute_similarity_transform_torch(pred_j3ds, target_j3ds)
     errors_pa = torch.sqrt(((S1_hat - target_j3ds) ** 2).sum(dim=-1)).mean(dim=-1).cpu().numpy()
+
     pred_verts = evaluation_accumulators['pred_verts']
     target_theta = evaluation_accumulators['target_theta']
 
@@ -101,13 +102,15 @@ def evaluate(evaluation_accumulators):
     accel_err = np.mean(compute_error_accel(joints_pred=pred_j3ds, joints_gt=target_j3ds)) * m2mm
     mpjpe = np.mean(errors) * m2mm
     pa_mpjpe = np.mean(errors_pa) * m2mm
+    pck = compute_pck(pred_j3ds, target_j3ds, [34, 27])
 
     eval_dict = {
         'mpjpe': mpjpe,
         'pa-mpjpe': pa_mpjpe,
         'pve': pve,
         'accel': accel,
-        'accel_err': accel_err
+        'accel_err': accel_err,
+        'pck_mean': pck[-1],
     }
 
     log_str = ' '.join([f'{k.upper()}: {v:.4f},' for k, v in eval_dict.items()])

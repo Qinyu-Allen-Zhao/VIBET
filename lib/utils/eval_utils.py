@@ -66,17 +66,17 @@ def compute_error_verts(pred_verts, target_verts=None, target_theta=None):
         device = 'cpu'
         smpl = SMPL(
             SMPL_MODEL_DIR,
-            batch_size=1, # target_theta.shape[0],
+            batch_size=1,  # target_theta.shape[0],
         ).to(device)
 
-        betas = torch.from_numpy(target_theta[:,75:]).to(device)
-        pose = torch.from_numpy(target_theta[:,3:75]).to(device)
+        betas = torch.from_numpy(target_theta[:, 75:]).to(device)
+        pose = torch.from_numpy(target_theta[:, 3:75]).to(device)
 
         target_verts = []
         b_ = torch.split(betas, 500)
         p_ = torch.split(pose, 500)
 
-        for b,p in zip(b_,p_):
+        for b, p in zip(b_, p_):
             output = smpl(betas=b, body_pose=p[:, 3:], global_orient=p[:, :3], pose2rot=True)
             target_verts.append(output.vertices.detach().cpu().numpy())
 
@@ -99,7 +99,7 @@ def compute_similarity_transform(S1, S2):
         S1 = S1.T
         S2 = S2.T
         transposed = True
-    assert(S2.shape[1] == S1.shape[1])
+    assert (S2.shape[1] == S1.shape[1])
 
     # 1. Remove mean.
     mu1 = S1.mean(axis=1, keepdims=True)
@@ -108,7 +108,7 @@ def compute_similarity_transform(S1, S2):
     X2 = S2 - mu2
 
     # 2. Compute variance of X1 used for scale.
-    var1 = np.sum(X1**2)
+    var1 = np.sum(X1 ** 2)
 
     # 3. The outer product of X1 and X2.
     K = X1.dot(X2.T)
@@ -127,10 +127,10 @@ def compute_similarity_transform(S1, S2):
     scale = np.trace(R.dot(K)) / var1
 
     # 6. Recover translation.
-    t = mu2 - scale*(R.dot(mu1))
+    t = mu2 - scale * (R.dot(mu1))
 
     # 7. Error:
-    S1_hat = scale*R.dot(S1) + t
+    S1_hat = scale * R.dot(S1) + t
 
     if transposed:
         S1_hat = S1_hat.T
@@ -205,10 +205,10 @@ def batch_compute_similarity_transform_torch(S1, S2):
     '''
     transposed = False
     if S1.shape[0] != 3 and S1.shape[0] != 2:
-        S1 = S1.permute(0,2,1)
-        S2 = S2.permute(0,2,1)
+        S1 = S1.permute(0, 2, 1)
+        S2 = S2.permute(0, 2, 1)
         transposed = True
-    assert(S2.shape[1] == S1.shape[1])
+    assert (S2.shape[1] == S1.shape[1])
 
     # 1. Remove mean.
     mu1 = S1.mean(axis=-1, keepdims=True)
@@ -218,10 +218,10 @@ def batch_compute_similarity_transform_torch(S1, S2):
     X2 = S2 - mu2
 
     # 2. Compute variance of X1 used for scale.
-    var1 = torch.sum(X1**2, dim=1).sum(dim=1)
+    var1 = torch.sum(X1 ** 2, dim=1).sum(dim=1)
 
     # 3. The outer product of X1 and X2.
-    K = X1.bmm(X2.permute(0,2,1))
+    K = X1.bmm(X2.permute(0, 2, 1))
 
     # 4. Solution that Maximizes trace(R'K) is R=U*V', where U, V are
     # singular vectors of K.
@@ -229,11 +229,11 @@ def batch_compute_similarity_transform_torch(S1, S2):
 
     # Construct Z that fixes the orientation of R to get det(R)=1.
     Z = torch.eye(U.shape[1], device=S1.device).unsqueeze(0)
-    Z = Z.repeat(U.shape[0],1,1)
-    Z[:,-1, -1] *= torch.sign(torch.det(U.bmm(V.permute(0,2,1))))
+    Z = Z.repeat(U.shape[0], 1, 1)
+    Z[:, -1, -1] *= torch.sign(torch.det(U.bmm(V.permute(0, 2, 1))))
 
     # Construct R.
-    R = V.bmm(Z.bmm(U.permute(0,2,1)))
+    R = V.bmm(Z.bmm(U.permute(0, 2, 1)))
 
     # 5. Recover scale.
     scale = torch.cat([torch.trace(x).unsqueeze(0) for x in R.bmm(K)]) / var1
@@ -245,7 +245,7 @@ def batch_compute_similarity_transform_torch(S1, S2):
     S1_hat = scale.unsqueeze(-1).unsqueeze(-1) * R.bmm(S1) + t
 
     if transposed:
-        S1_hat = S1_hat.permute(0,2,1)
+        S1_hat = S1_hat.permute(0, 2, 1)
 
     return S1_hat
 
@@ -279,12 +279,42 @@ def compute_errors(gt3ds, preds):
         gt3d = align_by_pelvis(gt3d)
         pred3d = align_by_pelvis(pred)
 
-        joint_error = np.sqrt(np.sum((gt3d - pred3d)**2, axis=1))
+        joint_error = np.sqrt(np.sum((gt3d - pred3d) ** 2, axis=1))
         errors.append(np.mean(joint_error))
 
         # Get PA error.
         pred3d_sym = compute_similarity_transform(pred3d, gt3d)
-        pa_error = np.sqrt(np.sum((gt3d - pred3d_sym)**2, axis=1))
+        pa_error = np.sqrt(np.sum((gt3d - pred3d_sym) ** 2, axis=1))
         errors_pa.append(np.mean(pa_error))
 
     return errors, errors_pa
+
+
+def compute_pck(dt_tensor, gt_tensor, refer_kpts):
+    """
+    Calculate Percentage of Correct Keypoints (PCK) on MPII
+
+    :param dt_tensor: a tensor of predicted keypoints
+    :param gt_tensor: a tensor of ground truth
+    :param refer_kpts: the keypoints to compute scale
+    :return:
+    """
+    dt = dt_tensor.detach().numpy()
+    gt = gt_tensor.detach().numpy()
+
+    alpha = 0.1
+    kpts_num = gt.shape[1]
+
+    # compute dist
+    scale = np.sqrt(np.sum(np.square(gt[:, refer_kpts[0], :] - gt[:, refer_kpts[1], :]), 1))
+    dist = np.sqrt(np.sum(np.square(dt - gt), 2)) / np.tile(scale, (kpts_num, 1)).T
+
+    # compute pck
+    pck = np.zeros([kpts_num + 1])
+    for kpt_idx in range(kpts_num):
+        pck[kpt_idx] = 100 * np.mean(dist[:, kpt_idx] <= alpha)
+
+    # compute average pck
+    pck[-1] = 100 * np.mean(dist <= alpha)
+
+    return pck

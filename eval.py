@@ -9,8 +9,6 @@ from torch.utils.data import DataLoader
 
 
 def main(cfg):
-    print(f'...Evaluating on 3DPW test set...')
-
     model = VIBE(
         n_layers=cfg.MODEL.TGRU.NUM_LAYERS,
         batch_size=cfg.TRAIN.BATCH_SIZE,
@@ -32,17 +30,20 @@ def main(cfg):
         print('{} is not a pretrained model!!!!'.format(cfg.TRAIN.PRETRAINED))
         exit()
 
-    test_db = ThreeDPW(set='test', seq_len=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
+    for dataset in cfg.TEST.DATASETS:
+        print(f'...Evaluating on {dataset} test set...')
 
-    test_loader = DataLoader(
-        dataset=test_db,
-        batch_size=cfg.TRAIN.BATCH_SIZE,
-        shuffle=False,
-        num_workers=cfg.NUM_WORKERS,
-    )
+        test_db = eval(dataset)(set='test', seq_len=cfg.DATASET.SEQLEN, debug=cfg.DEBUG)
 
-    evaluation_accumulators = validate(model=model, device=cfg.DEVICE, test_loader=test_loader)
-    evaluate(evaluation_accumulators)
+        test_loader = DataLoader(
+            dataset=test_db,
+            batch_size=cfg.TRAIN.BATCH_SIZE,
+            shuffle=False,
+            num_workers=cfg.NUM_WORKERS,
+        )
+
+        evaluation_accumulators = validate(model=model, device=cfg.DEVICE, test_loader=test_loader)
+        evaluate(evaluation_accumulators)
 
 
 if __name__ == '__main__':
