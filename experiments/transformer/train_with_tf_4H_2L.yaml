@@ -2,7 +2,7 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'vibe'
+EXP_NAME: 'vibet'
 OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 8
 SEED_VALUE: -1
@@ -49,7 +49,7 @@ TRAIN:
 MODEL:
   TEMPORAL_TYPE: 'gru'
   TF:
-    D_MODEL = 512
-    NHEAD = 8
-    NUM_LAYERS = 6
+    D_MODEL = 2048
+    NHEAD = 4
+    NUM_LAYERS = 2
     RESIDUAL = True

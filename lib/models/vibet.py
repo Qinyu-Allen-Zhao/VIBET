@@ -14,8 +14,7 @@ class TemporalEncoder(nn.Module):
             self,
             d_model=512,
             nhead=8,
-            num_layers=6,
-            use_residual=True
+            num_layers=6
     ):
         super(TemporalEncoder, self).__init__()
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead)
@@ -24,16 +23,9 @@ class TemporalEncoder(nn.Module):
             num_layers=num_layers
         )
 
-        self.use_residual = use_residual
-
     def forward(self, x):
-        x = x.permute(1, 0, 2)  # Convert NTF to TNF
-        y, _ = self.gru(x)
-        if self.use_residual and y.shape[-1] == 2048:
-            y = y + x
-
-        y = y.permute(1, 0, 2)  # Convert TNF to NTF
-        return y
+        out = self.transformer_encoder(x)
+        return out
 
 
 class SpatialEncoder(nn.Module):
@@ -120,9 +112,9 @@ class VIBET(nn.Module):
         if self.extract_features:
             batch_size, seq_len, nc, h, w = input.shape
 
-            feature = self.hmr.feature_extractor(input.reshape(-1, nc, h, w))
-            feature = feature.reshape(batch_size, seq_len, -1)
-            x = feature
+            frame_feature = self.hmr.feature_extractor(input.reshape(-1, nc, h, w))
+            frame_feature = frame_feature.reshape(batch_size, seq_len, -1)
+            x = frame_feature
         else:
             batch_size, seq_len = input.shape[:2]
             x = input
