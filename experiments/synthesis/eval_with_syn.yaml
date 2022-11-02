@@ -32,7 +32,7 @@ TRAIN:
   DATASETS_3D:
     - 'ThreeDPW'
     - 'MPII3D'
-  DATASET_EVAL: 'SynVideos'
+  DATASET_EVAL: 'ThreeDPW'
   GEN_LR: 0.00005
   GEN_WD: 0.0
   MOT_DISCR:
@@ -47,6 +47,11 @@ TRAIN:
       LAYERS: 3
       SIZE: 1024
       DROPOUT: 0.2
+TEST:
+  DATASET:
+    - 'SynVideos'
+    - 'ThreeDPW'
+    - 'MPII3D'
 MODEL:
   TEMPORAL_TYPE: 'gru'
   TGRU:
