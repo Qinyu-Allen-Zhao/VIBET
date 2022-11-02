@@ -290,29 +290,28 @@ def compute_errors(gt3ds, preds):
     return errors, errors_pa
 
 
-def compute_pck(dt_tensor, gt_tensor, refer_kpts):
+def compute_pck(dt_tensor, gt_tensor):
     """
     Calculate Percentage of Correct Keypoints (PCK) on MPII
 
     :param dt_tensor: a tensor of predicted keypoints
     :param gt_tensor: a tensor of ground truth
-    :param refer_kpts: the keypoints to compute scale
     :return:
     """
     dt = dt_tensor.detach().numpy()
     gt = gt_tensor.detach().numpy()
 
-    alpha = 0.1
+    pck_thre = 150  # 150 mm as recommended
+    m2mm = 1000
     kpts_num = gt.shape[1]
 
     # compute dist
-    scale = np.sqrt(np.sum(np.square(gt[:, refer_kpts[0], :] - gt[:, refer_kpts[1], :]), 1))
-    dist = np.sqrt(np.sum(np.square(dt - gt), 2)) / np.tile(scale, (kpts_num, 1)).T
+    dist = np.sqrt(np.sum(np.square(dt - gt), 2))
 
     # compute pck
     pck = np.zeros([kpts_num + 1])
     for kpt_idx in range(kpts_num):
-        pck[kpt_idx] = 100 * np.mean(dist[:, kpt_idx] <= alpha)
+        pck[kpt_idx] = 100 * np.mean(dist[:, kpt_idx] * m2mm <= pck_thre)
 
     # compute average pck
     print(pck)
