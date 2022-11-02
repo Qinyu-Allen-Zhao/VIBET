@@ -32,11 +32,11 @@ TRAIN:
     - 'ThreeDPW'
     - 'MPII3D'
   DATASET_EVAL: 'ThreeDPW'
-  GEN_LR: 0.00005
+  GEN_LR: 0.001
   GEN_WD: 0.0
   MOT_DISCR:
     OPTIM: 'Adam'
-    LR: 0.001
+    LR: 0.0001
     WD: 0.0001
     MOMENTUM: 0.9
     HIDDEN_SIZE: 1024
