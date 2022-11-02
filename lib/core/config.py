@@ -69,6 +69,9 @@ cfg.DATASET = CN()
 cfg.DATASET.SEQLEN = 20
 cfg.DATASET.OVERLAP = 0.5
 
+cfg.TEST = CN()
+cfg.TEST.DATASETS = ['ThreeDPW']
+
 cfg.LOSS = CN()
 cfg.LOSS.KP_2D_W = 60.
 cfg.LOSS.KP_3D_W = 30.
