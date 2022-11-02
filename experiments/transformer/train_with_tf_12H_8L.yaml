@@ -47,7 +47,7 @@ TRAIN:
       SIZE: 1024
       DROPOUT: 0.2
 MODEL:
-  TEMPORAL_TYPE: 'gru'
+  TEMPORAL_TYPE: 'transformer'
   TF:
     D_MODEL : 2048
     NHEAD : 12
