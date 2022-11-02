@@ -168,7 +168,7 @@ def prepare_output_dir(cfg, cfg_file):
 
     # ==== create logdir
     logtime = time.strftime('%d-%m-%Y_%H-%M-%S')
-    logdir = f'{logtime}_{cfg.EXP_NAME}'
+    logdir = f'{cfg.EXP_NAME}'
 
     logdir = osp.join(cfg.OUTPUT_DIR, logdir)
     os.makedirs(logdir, exist_ok=True)
