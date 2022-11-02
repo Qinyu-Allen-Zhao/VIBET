@@ -44,9 +44,10 @@ class TemporalEncoder(nn.Module):
         self.decoder = nn.Linear(d_model, 2048)
 
     def forward(self, x):
-        x = self.pos_encoder(x)
-        out = self.transformer_encoder(x)
+        out = self.pos_encoder(x)
+        out = self.transformer_encoder(out)
         out = self.decoder(out)
+        out += x  # residual learning
         return out
 
 
