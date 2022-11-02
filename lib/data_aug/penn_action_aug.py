@@ -60,7 +60,7 @@ def read_data(folder, aug_methods='cut'):
             bbox[fr_id, :] = np.array([c_x, c_y, w, h])
 
         if aug_methods == 'cut':
-            bbox = cut_augmentation(bbox)
+            bbox, kp_2d = cut_augmentation(bbox, kp_2d)
 
         dataset['vid_name'].append(np.array([f'{fname}'] * vid_dict['nframes']))
         dataset['img_name'].append(np.array(imgs))
@@ -83,13 +83,13 @@ def debug(folder, img_nums=4):
     import torch
 
     file_names = sorted(glob.glob(folder + '/labels/' + '*.mat'))
-    file_choice = np.random.choice(range(len(file_names)), 1)
+    file_choice = np.random.choice(range(len(file_names)), 1)[0]
     fname = file_names[file_choice]
 
     vid_dict = load_mat(fname)
     imgs = sorted(glob.glob(folder + '/frames/' + fname.strip().split('/')[-1].split('.')[0] + '/*.jpg'))
     img_choices = np.random.choice(range(len(imgs)), img_nums)
-    imgs = imgs[img_choices]
+    imgs = [imgs[c] for c in img_choices]
 
     kp_2d = np.zeros((img_nums, 13, 3))
     perm_idxs = get_perm_idxs('pennaction', 'common')
@@ -116,13 +116,13 @@ def debug(folder, img_nums=4):
 
         bbox[fr_id, :] = np.array([c_x, c_y, w, h])
 
-    bbox_cut = cut_augmentation(bbox)
+    bbox_cut, kp_2d = cut_augmentation(bbox, kp_2d)
 
     # crop bbox locations
     video = np.array(imgs)
     scale = 1.3
     cut_images = torch.cat(
-        [get_single_image_crop(image, bbox, scale=scale).unsqueeze(0) for image, bbox_cut in zip(video, bbox)], dim=0
+        [get_single_image_crop(image, bbox, scale=scale).unsqueeze(0) for image, bbox in zip(video, bbox_cut)], dim=0
     )
 
     # Randomly mask images
@@ -132,7 +132,30 @@ def debug(folder, img_nums=4):
     with torch.no_grad():
         masked_images = create_random_mask(raw_images)
 
+    import matplotlib.pyplot as plt
 
+    n = raw_images.shape[0]
+    plt.figure(figsize=(6, 8), dpi=300)
+    for i in range(n):
+        plt.subplot(4, 3, i * 3 + 1)
+        img = raw_images[i].permute(1, 2, 0)
+        img = (img - img.min()) / (img.max() - img.min())
+        plt.imshow(img)
+        plt.axis('off')
+
+        plt.subplot(4, 3, i * 3 + 2)
+        img = cut_images[i].permute(1, 2, 0)
+        img = (img - img.min()) / (img.max() - img.min())
+        plt.imshow(img)
+        plt.axis('off')
+
+        plt.subplot(4, 3, i * 3 + 3)
+        img = masked_images[i].permute(1, 2, 0)
+        img = (img - img.min()) / (img.max() - img.min())
+        plt.imshow(img)
+        plt.axis('off')
+
+    plt.show()
 
 
 if __name__ == '__main__':

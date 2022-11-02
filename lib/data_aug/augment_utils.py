@@ -3,23 +3,33 @@ import numpy as np
 import torch
 import torchvision.transforms.functional as F
 
-def cut_augmentation(bbox):
+
+def cut_augmentation(raw_bbox, kp_2d):
+    bbox = raw_bbox.copy()
     nframes, _ = bbox.shape
-    center_offset = np.random.rand(2) - 0.5
-    scale_offset = np.random.rand(2) - 0.5
+    center_offset = np.random.rand(2) * 0.5 - 0.25  # [-0.25, +0.25]
+    center_offset[np.where(center_offset < 0)] -= 0.2
+    center_offset[np.where(center_offset > 0)] += 0.2  # [-0.45, -0.2] U [0.2, 0.45]
 
     for i in range(nframes):
-        c_x, c_y, w, h = bbox[i, :]
+        c_x, c_y, w, h = raw_bbox[i, :]
+        kp_2d[i, :, 0] += c_x * center_offset[0]
+        kp_2d[i, :, 1] += c_y * center_offset[1]
+
         c_x += c_x * center_offset[0]
         c_y += c_y * center_offset[1]
-        w += w * scale_offset[0]
-        h += h * scale_offset[1]
+
+        print(raw_bbox[i, :])
+        print(c_x, c_y, w, h)
+        print(center_offset)
 
         bbox[i, :] = np.array([c_x, c_y, w, h])
 
-    return bbox
+    return bbox, kp_2d
 
-def create_random_mask(images, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0):
+
+def create_random_mask(raw_images, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0):
+    images = raw_images.clone()
     img = images[0]
 
     # Randomly generate one mask
@@ -48,9 +58,9 @@ def random_mask_for_one_image(img, ratio, scale, value):
             continue
 
         if value is None:
-            v = torch.empty([img_c, h, w], dtype=torch.float32).normal_()
+            v = 0
         else:
-            v = torch.tensor(value)[:, None, None]
+            v = value
 
         i = torch.randint(0, img_h - h + 1, size=(1,)).item()
         j = torch.randint(0, img_w - w + 1, size=(1,)).item()
