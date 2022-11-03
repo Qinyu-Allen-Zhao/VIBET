@@ -60,7 +60,7 @@ def read_data(folder, aug_methods='cut'):
             bbox[fr_id, :] = np.array([c_x, c_y, w, h])
 
         if aug_methods == 'cut':
-            bbox, kp_2d = cut_augmentation(bbox, kp_2d)
+            bbox = cut_augmentation(bbox)
 
         dataset['vid_name'].append(np.array([f'{fname}'] * vid_dict['nframes']))
         dataset['img_name'].append(np.array(imgs))
