@@ -22,6 +22,9 @@ export PYTHONPATH="./:$PYTHONPATH"
 ## PennAction
 #python lib/data_utils/penn_action_utils.py --dir /home/qinyu/datasets/penn_action
 
+# Human3.6M
+python lib/data_utils/h36m_utils.py --dir /home/qinyu/datasets/h36m
+
 # Synthesis videos
 #python lib/data_synthesis/syn_videos_process.py --dir /home/qinyu/datasets/syn_videos
 
@@ -29,5 +32,5 @@ export PYTHONPATH="./:$PYTHONPATH"
 #python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug cut
 #python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug erase
 
-python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/3dpw --aug cut
-python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/3dpw --aug erase
+#python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/3dpw --aug cut
+#python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/3dpw --aug erase

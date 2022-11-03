@@ -33,11 +33,12 @@ class TemporalEncoder(nn.Module):
             seq_len=32,
             d_model=512,
             nhead=8,
-            num_layers=6
+            num_layers=6,
+            dim_feedforward=2048
     ):
         super(TemporalEncoder, self).__init__()
         self.pos_encoder = PositionalEncoding(d_model, dropout=0.1, max_len=seq_len)
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead)
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead, dim_feedforward=dim_feedforward)
         self.transformer_encoder = nn.TransformerEncoder(
             self.encoder_layer,
             num_layers=num_layers
@@ -99,6 +100,7 @@ class VIBET(nn.Module):
             d_model=512,
             nhead=8,
             num_layers=6,
+            dim_feedforward=2048,
             extract_features=False,
             pretrained=osp.join(VIBE_DATA_DIR, 'spin_model_checkpoint.pth.tar'),
             no_encoder=False
@@ -114,6 +116,7 @@ class VIBET(nn.Module):
             d_model=d_model,
             nhead=nhead,
             num_layers=num_layers,
+            dim_feedforward=dim_feedforward,
         )
 
         # From scratch to evaluate a video

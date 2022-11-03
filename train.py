@@ -88,6 +88,7 @@ def main(cfg):
             pretrained=cfg.TRAIN.PRETRAINED_REGRESSOR,
             d_model=cfg.MODEL.TF.D_MODEL,
             nhead=cfg.MODEL.TF.NHEAD,
+            dim_feedforward=cfg.MODEL.TF.DIM_FEEDFORWARD,
             num_layers=cfg.MODEL.TF.NUM_LAYERS,
             no_encoder=cfg.MODEL.TF.NO_ENCODER
         ).to(cfg.DEVICE)

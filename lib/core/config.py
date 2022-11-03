@@ -101,6 +101,7 @@ cfg.MODEL.TF.NHEAD = 8
 cfg.MODEL.TF.NUM_LAYERS = 6
 cfg.MODEL.TF.RESIDUAL = True
 cfg.MODEL.TF.NO_ENCODER = False
+cfg.MODEL.TF.DIM_FEEDFORWARD = 2048
 
 
 def get_cfg_defaults():
