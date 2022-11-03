@@ -49,7 +49,7 @@ TRAIN:
 MODEL:
   TEMPORAL_TYPE: 'transformer'
   TF:
-    D_MODEL : 512
+    D_MODEL : 2048
     NHEAD : 8
     NUM_LAYERS : 1
     RESIDUAL : true
