@@ -84,8 +84,8 @@ def read_data(folder, set, debug=False):
 
         # process keypoints
         joints_2d = np.array(ann['part'][i])
-        joints_2d = np.hstack([joints_2d, np.ones([17, 1])])
-        joints_2d = convert_kps(joints_2d, 'h36m', 'spin').reshape((-1, 3))
+        joints_2d = np.hstack([joints_2d, np.ones([17, 1])]).reshape((1, -1, 3))
+        joints_2d = convert_kps(joints_2d, 'h36m', 'spin').reshape((1, -1, 3))
 
         joints_3d_raw = np.reshape(ann['S'][0, :, :], (1, 17, 3)) / 1000
         joints_3d = convert_kps(joints_3d_raw, "h36m", "spin").reshape((-1, 3))
