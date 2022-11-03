@@ -136,6 +136,7 @@ class VIBET(nn.Module):
         # Use spatial encoder or not
         self.spatial_encode = spatial_encode
         if self.spatial_encode:
+            self.sp_regressor = Regressor()
             self.spatial_encoder = SpatialEncoder(
                 input_size=85,
                 hidden_layer=d_model,
@@ -157,7 +158,7 @@ class VIBET(nn.Module):
 
         if self.spatial_encode:
             sp_inp = x.reshape((-1, x.size(-1)))
-            spatial = self.regressor(sp_inp, J_regressor=J_regressor)[0]
+            spatial = self.sp_regressor(sp_inp, J_regressor=J_regressor)[0]
             s = spatial['theta']
             sp_features = self.spatial_encoder(s)
             sp_features = sp_features.reshape(batch_size, seq_len, -1)
