@@ -269,7 +269,6 @@ class Regressor(nn.Module):
         pred_shape = init_shape
         pred_cam = init_cam
         for i in range(n_iter):
-            print(x.shape, pred_pose.shape)
             xc = torch.cat([x, pred_pose, pred_shape, pred_cam], 1)
             xc = self.fc1(xc)
             xc = self.drop1(xc)

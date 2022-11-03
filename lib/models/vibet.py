@@ -163,6 +163,7 @@ class VIBET(nn.Module):
             sp_features = sp_features.reshape(batch_size, seq_len, -1)
             tem_features = self.encoder(sp_features)
             tem_features += x
+            tem_features = tem_features.reshape(-1, tem_features.size(-1))
 
             smpl_output = self.regressor(tem_features, J_regressor=J_regressor)
         else:
