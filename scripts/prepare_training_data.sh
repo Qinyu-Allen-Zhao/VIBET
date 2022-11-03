@@ -26,8 +26,8 @@ export PYTHONPATH="./:$PYTHONPATH"
 #python lib/data_synthesis/syn_videos_process.py --dir /home/qinyu/datasets/syn_videos
 
 # Data augmentation
-python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug cut
-python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug erase
+#python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug cut
+#python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug erase
 
-python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/threedpw --aug cut
-python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/threedpw --aug erase
+python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/3dpw --aug cut
+python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/3dpw --aug erase
