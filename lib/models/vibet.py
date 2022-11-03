@@ -101,7 +101,7 @@ class VIBET(nn.Module):
             num_layers=6,
             extract_features=False,
             pretrained=osp.join(VIBE_DATA_DIR, 'spin_model_checkpoint.pth.tar'),
-            spatial_encode=False
+            no_encoder=False
     ):
 
         super(VIBET, self).__init__()
@@ -134,15 +134,7 @@ class VIBET(nn.Module):
             print(f'=> loaded pretrained model from \'{pretrained}\'')
 
         # Use spatial encoder or not
-        self.spatial_encode = spatial_encode
-        if self.spatial_encode:
-            self.sp_regressor = Regressor()
-            self.spatial_encoder = SpatialEncoder(
-                input_size=85,
-                hidden_layer=d_model,
-                num_layers=2,
-                output_size=d_model,
-            )
+        self.no_encoder = no_encoder
 
     def forward(self, input, J_regressor=None):
         # input size NTF
@@ -156,17 +148,9 @@ class VIBET(nn.Module):
             batch_size, seq_len = input.shape[:2]
             x = input
 
-        if self.spatial_encode:
-            sp_inp = x.reshape((-1, x.size(-1)))
-            # spatial = self.sp_regressor(sp_inp, J_regressor=J_regressor)[0]
-            # s = spatial['theta']
-            # sp_features = self.spatial_encoder(s)
-            # sp_features = sp_features.reshape(batch_size, seq_len, -1)
-            # tem_features = self.encoder(sp_features)
-            # tem_features += x
-            # tem_features = tem_features.reshape(-1, tem_features.size(-1))
-
-            smpl_output = self.regressor(sp_inp, J_regressor=J_regressor)
+        if self.no_encoder:
+            feature = x.reshape((-1, x.size(-1)))
+            smpl_output = self.regressor(feature, J_regressor=J_regressor)
         else:
             feature = self.encoder(x)
             feature = feature.reshape(-1, feature.size(-1))

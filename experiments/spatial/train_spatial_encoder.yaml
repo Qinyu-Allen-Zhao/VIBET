@@ -2,7 +2,7 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'spatial'
+EXP_NAME: 'no_temporal'
 OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 1
 SEED_VALUE: -1
@@ -53,4 +53,4 @@ MODEL:
     NHEAD : 8
     NUM_LAYERS : 1
     RESIDUAL : true
-    SPATIAL_ENCODER: true
+    NO_ENCODER: true
