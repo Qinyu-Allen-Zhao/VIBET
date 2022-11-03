@@ -101,6 +101,7 @@ class VIBET(nn.Module):
             num_layers=6,
             extract_features=False,
             pretrained=osp.join(VIBE_DATA_DIR, 'spin_model_checkpoint.pth.tar'),
+            spatial_encode=False
     ):
 
         super(VIBET, self).__init__()
@@ -108,7 +109,7 @@ class VIBET(nn.Module):
         self.seq_len = seq_len
         self.batch_size = batch_size
 
-        self.encoder = TemporalEncoder(
+        self.temporal_encoder = TemporalEncoder(
             seq_len=seq_len,
             d_model=d_model,
             nhead=nhead,
@@ -132,6 +133,16 @@ class VIBET(nn.Module):
             self.regressor.load_state_dict(pretrained_dict, strict=False)
             print(f'=> loaded pretrained model from \'{pretrained}\'')
 
+        # Use spatial encoder or not
+        self.spatial_encode = spatial_encode
+        if self.spatial_encode:
+            self.spatial_encoder = SpatialEncoder(
+                input_size=85,
+                hidden_layer=2048,
+                num_layers=2,
+                output_size=2048,
+            )
+
     def forward(self, input, J_regressor=None):
         # input size NTF
         if self.extract_features:
@@ -144,10 +155,21 @@ class VIBET(nn.Module):
             batch_size, seq_len = input.shape[:2]
             x = input
 
-        feature = self.encoder(x)
-        feature = feature.reshape(-1, feature.size(-1))
+        if self.spatial_encode:
+            spatial = self.regressor(x, J_regressor=J_regressor)[0]
+            s = spatial['theta']
+            sp_features = self.spatial_encoder(s)
 
-        smpl_output = self.regressor(feature, J_regressor=J_regressor)
+            x += sp_features
+            tem_features = self.temporal_encoder(x)
+
+            smpl_output = self.regressor(tem_features, J_regressor=J_regressor)
+        else:
+            feature = self.temporal_encoder(x)
+            feature = feature.reshape(-1, feature.size(-1))
+
+            smpl_output = self.regressor(feature, J_regressor=J_regressor)
+
         for s in smpl_output:
             s['theta'] = s['theta'].reshape(batch_size, seq_len, -1)
             s['verts'] = s['verts'].reshape(batch_size, seq_len, -1, 3)

@@ -89,6 +89,7 @@ def main(cfg):
             d_model=cfg.MODEL.TF.D_MODEL,
             nhead=cfg.MODEL.TF.NHEAD,
             num_layers=cfg.MODEL.TF.NUM_LAYERS,
+            spatial_encode=cfg.MODEL.TF.SPATIAL_ENCODER
         ).to(cfg.DEVICE)
     else:
         raise Exception()
