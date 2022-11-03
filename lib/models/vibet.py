@@ -138,9 +138,9 @@ class VIBET(nn.Module):
         if self.spatial_encode:
             self.spatial_encoder = SpatialEncoder(
                 input_size=85,
-                hidden_layer=2048,
+                hidden_layer=d_model,
                 num_layers=2,
-                output_size=2048,
+                output_size=d_model,
             )
 
     def forward(self, input, J_regressor=None):
@@ -156,12 +156,13 @@ class VIBET(nn.Module):
             x = input
 
         if self.spatial_encode:
-            spatial = self.regressor(x, J_regressor=J_regressor)[0]
+            sp_inp = x.reshape((-1, x.size(-1)))
+            spatial = self.regressor(sp_inp, J_regressor=J_regressor)[0]
             s = spatial['theta']
             sp_features = self.spatial_encoder(s)
-
-            x += sp_features
-            tem_features = self.encoder(x)
+            sp_features = sp_features.reshape(batch_size, seq_len, -1)
+            tem_features = self.encoder(sp_features)
+            tem_features += x
 
             smpl_output = self.regressor(tem_features, J_regressor=J_regressor)
         else:
