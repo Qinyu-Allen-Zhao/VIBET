@@ -17,7 +17,8 @@ LOSS:
 TRAIN:
   BATCH_SIZE: 16
   NUM_ITERS_PER_EPOCH: 500
-  PRETRAINED: 'data/vibe_data/vibe_model_w_3dpw.pth.tar'
+#  PRETRAINED: 'data/vibe_data/vibe_model_w_3dpw.pth.tar'
+  PRETRAINED: 'results/vibe_tests/reproduce/model_best.pth.tar'
   PRETRAINED_REGRESSOR: 'data/vibe_data/spin_model_checkpoint.pth.tar'
   RESUME: ''
   START_EPOCH: 0
