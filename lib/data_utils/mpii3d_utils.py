@@ -272,7 +272,7 @@ def read_test_data(dataset_path):
 
             joints_3d_raw = np.reshape(annot3[frame_i, 0, :, :], (1, 17, 3)) / 1000
             joints_3d = convert_kps(joints_3d_raw, "mpii3d_test", "spin").reshape((-1, 3))
-            joints_3d = joints_3d - joints_3d[39] # substract pelvis zero is the root for test
+            joints_3d = joints_3d - joints_3d[39]  # substract pelvis zero is the root for test
 
             bbox = get_bbox_from_kp2d(joints_2d[~np.all(joints_2d == 0, axis=1)]).reshape(4)
 
