@@ -14,7 +14,7 @@ export PYTHONPATH="./:$PYTHONPATH"
 #python lib/data_utils/threedpw_utils.py --dir /home/qinyu/datasets/3dpw
 
 ## MPI-INF-3D-HP
-python lib/data_utils/mpii3d_utils.py --dir /home/qinyu/datasets/mpi_inf_3dhp
+#python lib/data_utils/mpii3d_utils.py --dir /home/qinyu/datasets/mpi_inf_3dhp
 #
 ## PoseTrack
 #python lib/data_utils/posetrack_utils.py --dir /home/qinyu/datasets/posetrack
@@ -24,3 +24,10 @@ python lib/data_utils/mpii3d_utils.py --dir /home/qinyu/datasets/mpi_inf_3dhp
 
 # Synthesis videos
 #python lib/data_synthesis/syn_videos_process.py --dir /home/qinyu/datasets/syn_videos
+
+# Data augmentation
+python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug cut
+python lib/data_aug/penn_action_aug.py --dir /home/qinyu/datasets/Penn_Action --aug erase
+
+python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/threedpw --aug cut
+python lib/data_aug/threedpw_aug.py --dir /home/qinyu/datasets/threedpw --aug erase
