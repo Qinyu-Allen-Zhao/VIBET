@@ -2,23 +2,35 @@ import os
 import torch
 
 from lib.dataset import ThreeDPW, MPII3D, SynVideos
-from lib.models import VIBE
+from lib.models import VIBE, VIBET
 from lib.core.function import evaluate, validate
 from lib.core.config import parse_args
 from torch.utils.data import DataLoader
 
 
 def main(cfg):
-    model = VIBE(
-        n_layers=cfg.MODEL.TGRU.NUM_LAYERS,
-        batch_size=cfg.TRAIN.BATCH_SIZE,
-        seq_len=cfg.DATASET.SEQLEN,
-        hidden_size=cfg.MODEL.TGRU.HIDDEN_SIZE,
-        pretrained=cfg.TRAIN.PRETRAINED_REGRESSOR,
-        add_linear=cfg.MODEL.TGRU.ADD_LINEAR,
-        bidirectional=cfg.MODEL.TGRU.BIDIRECTIONAL,
-        use_residual=cfg.MODEL.TGRU.RESIDUAL,
-    ).to(cfg.DEVICE)
+    if cfg.MODEL.TEMPORAL_TYPE == 'gru':
+        model = VIBE(
+            n_layers=cfg.MODEL.TGRU.NUM_LAYERS,
+            batch_size=cfg.TRAIN.BATCH_SIZE,
+            seq_len=cfg.DATASET.SEQLEN,
+            hidden_size=cfg.MODEL.TGRU.HIDDEN_SIZE,
+            pretrained=cfg.TRAIN.PRETRAINED_REGRESSOR,
+            add_linear=cfg.MODEL.TGRU.ADD_LINEAR,
+            bidirectional=cfg.MODEL.TGRU.BIDIRECTIONAL,
+            use_residual=cfg.MODEL.TGRU.RESIDUAL,
+        ).to(cfg.DEVICE)
+    elif cfg.MODEL.TEMPORAL_TYPE == 'transformer':
+        model = VIBET(
+            batch_size=cfg.TRAIN.BATCH_SIZE,
+            seq_len=cfg.DATASET.SEQLEN,
+            pretrained=cfg.TRAIN.PRETRAINED_REGRESSOR,
+            d_model=cfg.MODEL.TF.D_MODEL,
+            nhead=cfg.MODEL.TF.NHEAD,
+            num_layers=cfg.MODEL.TF.NUM_LAYERS,
+        ).to(cfg.DEVICE)
+    else:
+        raise Exception()
 
     if cfg.TRAIN.PRETRAINED != '' and os.path.isfile(cfg.TRAIN.PRETRAINED):
         checkpoint = torch.load(cfg.TRAIN.PRETRAINED)
