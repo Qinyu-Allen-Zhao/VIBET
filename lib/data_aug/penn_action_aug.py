@@ -116,7 +116,7 @@ def debug(folder, img_nums=4):
 
         bbox[fr_id, :] = np.array([c_x, c_y, w, h])
 
-    bbox_cut, kp_2d = cut_augmentation(bbox, kp_2d)
+    bbox_cut = cut_augmentation(bbox)
 
     # crop bbox locations
     video = np.array(imgs)
@@ -169,4 +169,4 @@ if __name__ == '__main__':
         debug(args.dir, 4)
     else:
         dataset = read_data(args.dir, args.aug)
-        joblib.dump(dataset, osp.join(VIBE_DB_DIR, 'pennaction_train_db_aug.pt'))
+        joblib.dump(dataset, osp.join(VIBE_DB_DIR, f'pennaction_{args.aug}_train_db.pt'))

@@ -4,7 +4,7 @@ import torch
 import torchvision.transforms.functional as F
 
 
-def cut_augmentation(raw_bbox, kp_2d):
+def cut_augmentation(raw_bbox):
     bbox = raw_bbox.copy()
     nframes, _ = bbox.shape
     center_offset = np.random.rand(2) * 0.5 - 0.25  # [-0.25, +0.25]
@@ -13,8 +13,6 @@ def cut_augmentation(raw_bbox, kp_2d):
 
     for i in range(nframes):
         c_x, c_y, w, h = raw_bbox[i, :]
-        kp_2d[i, :, 0] += c_x * center_offset[0]
-        kp_2d[i, :, 1] += c_y * center_offset[1]
 
         c_x += c_x * center_offset[0]
         c_y += c_y * center_offset[1]
@@ -25,7 +23,7 @@ def cut_augmentation(raw_bbox, kp_2d):
 
         bbox[i, :] = np.array([c_x, c_y, w, h])
 
-    return bbox, kp_2d
+    return bbox
 
 
 def create_random_mask(raw_images, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0):
