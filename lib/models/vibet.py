@@ -109,7 +109,7 @@ class VIBET(nn.Module):
         self.seq_len = seq_len
         self.batch_size = batch_size
 
-        self.temporal_encoder = TemporalEncoder(
+        self.encoder = TemporalEncoder(
             seq_len=seq_len,
             d_model=d_model,
             nhead=nhead,
@@ -161,11 +161,11 @@ class VIBET(nn.Module):
             sp_features = self.spatial_encoder(s)
 
             x += sp_features
-            tem_features = self.temporal_encoder(x)
+            tem_features = self.encoder(x)
 
             smpl_output = self.regressor(tem_features, J_regressor=J_regressor)
         else:
-            feature = self.temporal_encoder(x)
+            feature = self.encoder(x)
             feature = feature.reshape(-1, feature.size(-1))
 
             smpl_output = self.regressor(feature, J_regressor=J_regressor)
