@@ -67,8 +67,15 @@ class Dataset2D(Dataset):
         start_index, end_index = self.vid_indices[index]
 
         kp_2d = self.db['joints2D'][start_index:end_index+1]
-        if self.dataset_name != 'posetrack':
-            kp_2d = convert_kps(kp_2d, src=self.dataset_name, dst='spin')
+        if "_cut" in self.dataset_name:
+            dataset = self.dataset_name[:-4]
+        elif "_erase" in self.dataset_name:
+            dataset = self.dataset_name[:-6]
+        else:
+            dataset = self.dataset_name
+
+        if dataset != 'posetrack':
+            kp_2d = convert_kps(kp_2d, src=dataset, dst='spin')
         kp_2d_tensor = np.ones((self.seq_len, 49, 3), dtype=np.float16)
 
         bbox  = self.db['bbox'][start_index:end_index+1]

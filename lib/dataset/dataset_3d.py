@@ -59,20 +59,27 @@ class Dataset3D(Dataset):
         return db
 
     def get_single_item(self, index):
+        if "_cut" in self.dataset_name:
+            dataset = self.dataset_name[:-4]
+        elif "_erase" in self.dataset_name:
+            dataset = self.dataset_name[:-6]
+        else:
+            dataset = self.dataset_name
+
         start_index, end_index = self.vid_indices[index]
 
         is_train = self.set == 'train'
 
-        if '3dpw' in self.dataset_name:
+        if '3dpw' in dataset:
             kp_2d = convert_kps(self.db['joints2D'][start_index:end_index + 1], src='common', dst='spin')
             kp_3d = self.db['joints3D'][start_index:end_index + 1]
-        elif self.dataset_name == 'mpii3d':
+        elif dataset == 'mpii3d':
             kp_2d = self.db['joints2D'][start_index:end_index + 1]
             if is_train:
                 kp_3d = self.db['joints3D'][start_index:end_index + 1]
             else:
                 kp_3d = convert_kps(self.db['joints3D'][start_index:end_index + 1], src='spin', dst='common')
-        elif self.dataset_name == 'h36m':
+        elif dataset == 'h36m':
             kp_2d = self.db['joints2D'][start_index:end_index + 1]
             if is_train:
                 kp_3d = self.db['joints3D'][start_index:end_index + 1]
@@ -84,12 +91,12 @@ class Dataset3D(Dataset):
         kp_3d_tensor = np.zeros((self.seq_len, nj, 3), dtype=np.float16)
 
 
-        if '3dpw' in self.dataset_name:
+        if '3dpw' in dataset:
             pose  = self.db['pose'][start_index:end_index+1]
             shape = self.db['shape'][start_index:end_index+1]
             w_smpl = torch.ones(self.seq_len).float()
             w_3d = torch.ones(self.seq_len).float()
-        elif self.dataset_name == 'h36m':
+        elif dataset == 'h36m':
             if not is_train:
                 pose = np.zeros((kp_2d.shape[0], 72))
                 shape = np.zeros((kp_2d.shape[0], 10))
@@ -100,7 +107,7 @@ class Dataset3D(Dataset):
                 shape = self.db['shape'][start_index:end_index + 1]
                 w_smpl = torch.ones(self.seq_len).float()
                 w_3d = torch.ones(self.seq_len).float()
-        elif self.dataset_name == 'mpii3d':
+        elif dataset == 'mpii3d':
             pose = np.zeros((kp_2d.shape[0], 72))
             shape = np.zeros((kp_2d.shape[0], 10))
             w_smpl = torch.zeros(self.seq_len).float()
@@ -142,10 +149,10 @@ class Dataset3D(Dataset):
             'w_3d': w_3d,
         }
 
-        if self.dataset_name == 'mpii3d' and not is_train:
+        if dataset == 'mpii3d' and not is_train:
             target['valid'] = self.db['valid_i'][start_index:end_index+1]
 
-        if '3dpw' in self.dataset_name and not is_train:
+        if '3dpw' in dataset and not is_train:
             vn = self.db['vid_name'][start_index:end_index + 1]
             fi = self.db['frame_id'][start_index:end_index + 1]
             target['instance_id'] = [f'{v}/{f}'for v,f in zip(vn,fi)]
