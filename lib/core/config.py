@@ -25,6 +25,8 @@ cfg.LOGDIR = ''
 cfg.NUM_WORKERS = 8
 cfg.DEBUG_FREQ = 1000
 cfg.SEED_VALUE = -1
+cfg.SAVE_PREDICTIONS = False
+cfg.SAVE_PRE_PATH = "results/smooth_check/"
 
 cfg.CUDNN = CN()
 cfg.CUDNN.BENCHMARK = True

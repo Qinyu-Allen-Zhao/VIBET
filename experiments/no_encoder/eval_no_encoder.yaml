@@ -6,6 +6,7 @@ EXP_NAME: 'no_temporal'
 OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 1
 SEED_VALUE: -1
+SAVE_PREDICTIONS: true
 DATASET:
   SEQLEN: 16
 LOSS:

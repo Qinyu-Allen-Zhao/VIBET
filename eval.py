@@ -1,4 +1,6 @@
 import os
+
+import joblib
 import torch
 
 from lib.dataset import ThreeDPW, MPII3D, SynVideos, ThreeDPWErase, ThreeDPWCut
@@ -43,6 +45,10 @@ def main(cfg):
         print('{} is not a pretrained model!!!!'.format(cfg.TRAIN.PRETRAINED))
         exit()
 
+    if cfg.SAVE_PREDICTIONS:
+        if not os.path.exists(cfg.SAVE_PRE_PATH):
+            os.mkdir(cfg.SAVE_PRE_PATH)
+
     for dataset in cfg.TEST.DATASETS:
         print(f'...Evaluating on {dataset} test set...')
 
@@ -56,6 +62,8 @@ def main(cfg):
         )
 
         evaluation_accumulators = validate(model=model, device=cfg.DEVICE, test_loader=test_loader)
+        if cfg.SAVE_PREDICTIONS:
+            joblib.dump(evaluation_accumulators, os.path.join(cfg.SAVE_PRE_PATH, f"{cfg.EXP_NAME}_{dataset}.pkl"))
         evaluate(evaluation_accumulators, dataset)
 
 
