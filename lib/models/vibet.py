@@ -158,15 +158,15 @@ class VIBET(nn.Module):
 
         if self.spatial_encode:
             sp_inp = x.reshape((-1, x.size(-1)))
-            spatial = self.sp_regressor(sp_inp, J_regressor=J_regressor)[0]
-            s = spatial['theta']
-            sp_features = self.spatial_encoder(s)
-            sp_features = sp_features.reshape(batch_size, seq_len, -1)
-            tem_features = self.encoder(sp_features)
-            tem_features += x
-            tem_features = tem_features.reshape(-1, tem_features.size(-1))
+            # spatial = self.sp_regressor(sp_inp, J_regressor=J_regressor)[0]
+            # s = spatial['theta']
+            # sp_features = self.spatial_encoder(s)
+            # sp_features = sp_features.reshape(batch_size, seq_len, -1)
+            # tem_features = self.encoder(sp_features)
+            # tem_features += x
+            # tem_features = tem_features.reshape(-1, tem_features.size(-1))
 
-            smpl_output = self.regressor(tem_features, J_regressor=J_regressor)
+            smpl_output = self.regressor(sp_inp, J_regressor=J_regressor)
         else:
             feature = self.encoder(x)
             feature = feature.reshape(-1, feature.size(-1))
