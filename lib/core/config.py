@@ -12,6 +12,7 @@ PENNACTION_DIR = 'data/penn_action'
 POSETRACK_DIR = 'data/posetrack'
 SYN_VIDEOS_DIR = 'data/syn_videos'
 VIBE_DATA_DIR = 'data/vibe_data'
+H36M_DIR = 'data/h36m'
 
 # Configuration variables
 cfg = CN()

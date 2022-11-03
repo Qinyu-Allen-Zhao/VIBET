@@ -63,7 +63,7 @@ class Dataset3D(Dataset):
 
         is_train = self.set == 'train'
 
-        if self.dataset_name == '3dpw':
+        if '3dpw' in self.dataset_name:
             kp_2d = convert_kps(self.db['joints2D'][start_index:end_index + 1], src='common', dst='spin')
             kp_3d = self.db['joints3D'][start_index:end_index + 1]
         elif self.dataset_name == 'mpii3d':
@@ -84,7 +84,7 @@ class Dataset3D(Dataset):
         kp_3d_tensor = np.zeros((self.seq_len, nj, 3), dtype=np.float16)
 
 
-        if self.dataset_name == '3dpw':
+        if '3dpw' in self.dataset_name:
             pose  = self.db['pose'][start_index:end_index+1]
             shape = self.db['shape'][start_index:end_index+1]
             w_smpl = torch.ones(self.seq_len).float()
@@ -145,7 +145,7 @@ class Dataset3D(Dataset):
         if self.dataset_name == 'mpii3d' and not is_train:
             target['valid'] = self.db['valid_i'][start_index:end_index+1]
 
-        if self.dataset_name == '3dpw' and not is_train:
+        if '3dpw' in self.dataset_name and not is_train:
             vn = self.db['vid_name'][start_index:end_index + 1]
             fi = self.db['frame_id'][start_index:end_index + 1]
             target['instance_id'] = [f'{v}/{f}'for v,f in zip(vn,fi)]

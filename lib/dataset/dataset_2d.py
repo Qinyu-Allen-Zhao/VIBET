@@ -107,7 +107,7 @@ class Dataset2D(Dataset):
 
             vid_name = self.db['vid_name'][start_index]
 
-            if self.dataset_name == 'pennaction':
+            if 'pennaction' in self.dataset_name:
                 vid_folder = "frames"
                 vid_name = vid_name.split('/')[-1].split('.')[0]
                 img_id = "img_name"
