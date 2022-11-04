@@ -157,6 +157,8 @@ def debug(folder, img_nums=4):
 
     plt.show()
 
+    return raw_images, cut_images, masked_images
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

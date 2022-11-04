@@ -4,7 +4,7 @@ LOGDIR: ''
 DEVICE: 'cuda'
 EXP_NAME: 'reproduce_wo_3dpw'
 OUTPUT_DIR: 'results/vibe_tests'
-NUM_WORKERS: 8
+NUM_WORKERS: 1
 SEED_VALUE: -1
 DATASET:
   SEQLEN: 16
