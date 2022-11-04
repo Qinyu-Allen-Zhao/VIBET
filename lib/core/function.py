@@ -34,7 +34,9 @@ def validate(model, device, test_loader):
     j = 0
     for i, target in enumerate(test_loader):
         j += 1
-        if j > 200:
+        if j > 400:
+            # Human3.6M is too big, we cannot run the whole dataset
+            # We only check the first 200 batchs
             break
 
         move_dict_to_device(target, device)
@@ -102,9 +104,15 @@ def evaluate(evaluation_accumulators, dataset='ThreeDPW'):
 
     m2mm = 1000
 
-    pve = np.mean(compute_error_verts(target_theta=target_theta, pred_verts=pred_verts)) * m2mm
-    accel = np.mean(compute_accel(pred_j3ds)) * m2mm
-    accel_err = np.mean(compute_error_accel(joints_pred=pred_j3ds, joints_gt=target_j3ds)) * m2mm
+    if dataset != 'H36M':
+        pve = np.mean(compute_error_verts(target_theta=target_theta, pred_verts=pred_verts)) * m2mm
+        accel = np.mean(compute_accel(pred_j3ds)) * m2mm
+        accel_err = np.mean(compute_error_accel(joints_pred=pred_j3ds, joints_gt=target_j3ds)) * m2mm
+    else:
+        pve = -1
+        accel = -1
+        accel_err = -1
+
     mpjpe = np.mean(errors) * m2mm
     pa_mpjpe = np.mean(errors_pa) * m2mm
     if dataset == 'MPII3D':
