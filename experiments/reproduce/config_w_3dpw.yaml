@@ -3,7 +3,7 @@ DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
 EXP_NAME: 'reproduce'
-OUTPUT_DIR: 'results/vibe_wo_3dpw'
+OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 1
 SEED_VALUE: -1
 DATASET:

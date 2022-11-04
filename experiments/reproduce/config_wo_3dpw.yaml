@@ -2,8 +2,8 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'vibe'
-OUTPUT_DIR: 'results/vibe_wo_3dpw'
+EXP_NAME: 'reproduce_wo_3dpw'
+OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 8
 SEED_VALUE: -1
 DATASET:

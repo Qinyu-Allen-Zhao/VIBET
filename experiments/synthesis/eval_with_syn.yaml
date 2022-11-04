@@ -49,7 +49,7 @@ TRAIN:
       DROPOUT: 0.2
 TEST:
   DATASETS:
-    - 'SynVideos'
+#    - 'SynVideos'
     - 'ThreeDPW'
     - 'MPII3D'
 MODEL:

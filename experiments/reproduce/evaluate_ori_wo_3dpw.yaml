@@ -2,7 +2,7 @@ DEBUG: false
 DEBUG_FREQ: 5
 LOGDIR: ''
 DEVICE: 'cuda'
-EXP_NAME: 'vibe'
+EXP_NAME: 'reproduce_wo_3dpw'
 OUTPUT_DIR: 'results/vibe_tests'
 NUM_WORKERS: 8
 SEED_VALUE: -1
@@ -17,7 +17,8 @@ LOSS:
 TRAIN:
   BATCH_SIZE: 16
   NUM_ITERS_PER_EPOCH: 500
-  PRETRAINED: 'data/vibe_data/vibe_model_wo_3dpw.pth.tar'
+#  PRETRAINED: 'data/vibe_data/vibe_model_wo_3dpw.pth.tar'
+  PRETRAINED: 'results/vibe_tests/reproduce_wo_3dpw/model_best.pth.tar'
   PRETRAINED_REGRESSOR: 'data/vibe_data/spin_model_checkpoint.pth.tar'
   RESUME: ''
   START_EPOCH: 0
