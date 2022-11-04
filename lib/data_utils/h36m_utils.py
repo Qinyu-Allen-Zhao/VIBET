@@ -89,7 +89,7 @@ def read_data(folder, set, debug=False):
 
         joints_3d_raw = np.reshape(ann['S'][0, :, :], (1, 17, 3)) / 1000
         joints_3d = convert_kps(joints_3d_raw, "h36m", "spin").reshape((-1, 3))
-        # joints_3d = joints_3d - joints_3d[39]
+        joints_3d = joints_3d - joints_3d[39]
 
         dataset['vid_name'].append(img[:-11])
         dataset['frame_id'].append(img)
