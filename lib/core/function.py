@@ -31,7 +31,12 @@ def validate(model, device, test_loader):
 
     J_regressor = torch.from_numpy(np.load(osp.join(VIBE_DATA_DIR, 'J_regressor_h36m.npy'))).float()
 
+    j = 0
     for i, target in enumerate(test_loader):
+        j += 1
+        if j > 420:
+            break
+
         move_dict_to_device(target, device)
 
         # <=============
