@@ -3,7 +3,7 @@ import os
 import joblib
 import torch
 
-from lib.dataset import ThreeDPW, MPII3D, SynVideos, ThreeDPWErase, ThreeDPWCut
+from lib.dataset import ThreeDPW, MPII3D, SynVideos, ThreeDPWErase, ThreeDPWCut, H36M
 from lib.models import VIBE, VIBET
 from lib.core.function import evaluate, validate
 from lib.core.config import parse_args
