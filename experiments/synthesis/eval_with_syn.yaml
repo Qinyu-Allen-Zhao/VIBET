@@ -50,8 +50,9 @@ TRAIN:
 TEST:
   DATASETS:
 #    - 'SynVideos'
-    - 'ThreeDPW'
-    - 'MPII3D'
+#    - 'ThreeDPW'
+#    - 'MPII3D'
+    - 'H36M'
 MODEL:
   TEMPORAL_TYPE: 'gru'
   TGRU:

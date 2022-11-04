@@ -34,7 +34,7 @@ def validate(model, device, test_loader):
     j = 0
     for i, target in enumerate(test_loader):
         j += 1
-        if j > 420:
+        if j > 200:
             break
 
         move_dict_to_device(target, device)
