@@ -5,12 +5,25 @@ import torchvision.transforms.functional as F
 
 
 def cut_augmentation(raw_bbox, debug=False):
+
     bbox = raw_bbox.copy()
     nframes, _ = bbox.shape
+
+    ##################################################################
+    # STEP 1 - Generate two random decimal offset factor between -0.25 and 0.25 and  
+    #  remap them to -0.45 to -0.2 or 0.2 to 0.45.
+    ##################################################################
+
     center_offset = np.random.rand(2) * 0.5 - 0.25  # [-0.25, +0.25]
     center_offset[np.where(center_offset < 0)] -= 0.2
     center_offset[np.where(center_offset > 0)] += 0.2  # [-0.45, -0.2] U [0.2, 0.45]
 
+
+    ##################################################################
+    # STEP 2 - Add an offset to the original center coordinates 
+    #  obtained by multiplying the center coordinates with the offset 
+    #  factor.
+    ##################################################################
     for i in range(nframes):
         c_x, c_y, w, h = raw_bbox[i, :]
 
@@ -31,10 +44,14 @@ def create_random_mask(raw_images, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0)
     images = raw_images.clone()
     img = images[0]
 
-    # Randomly generate one mask
+    ##################################################################
+    # STEP 1 - Randomly generate one mask
+    ##################################################################
     i, j, h, w, v = random_mask_for_one_image(img, ratio, scale, value)
 
-    # Mask all images in the video segment
+    ##################################################################
+    # STEP 2 - Mask all images in the video segment with same mask.
+    ##################################################################
     for n, img in enumerate(images):
         images[n] = F.erase(img, i, j, h, w, v)
 
