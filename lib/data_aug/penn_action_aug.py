@@ -19,6 +19,11 @@ from lib.data_utils.feature_extractor import extract_features
 
 
 def read_data(folder, aug_methods='cut'):
+    ####################################################################################
+    # The function is to read data. 
+    # At the same time, content related to bounding box will also be loaded.
+    # If the value of aug_methods is true, the data enhancement method will be applied.
+    ####################################################################################
     dataset = {
         'img_name': [],
         'joints2D': [],
@@ -80,6 +85,9 @@ def read_data(folder, aug_methods='cut'):
 
 
 def debug(folder, img_nums=4):
+    ####################################################################################
+    # This function can display images for debugging.
+    ####################################################################################
     import torch
 
     file_names = sorted(glob.glob(folder + '/labels/' + '*.mat'))
