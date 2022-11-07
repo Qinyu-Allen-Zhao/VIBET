@@ -26,6 +26,11 @@ MIN_KP = 6
 
 
 def read_data(folder, set, debug=False, aug_methods='cut'):
+    """
+    Reading 3DPW dataset and convert it to the format which our training framework can use, SMPL,
+    and do the augmentation method if needed.
+    """
+
     dataset = {
         'vid_name': [],
         'frame_id': [],
@@ -44,11 +49,14 @@ def read_data(folder, set, debug=False, aug_methods='cut'):
     sequences = [x.split('.')[0] for x in os.listdir(osp.join(folder, 'sequenceFiles', set))]
 
     J_regressor = None
-
+    
+    # load SMPL model
     smpl = SMPL(SMPL_MODEL_DIR, batch_size=1, create_transl=False)
+
     if set == 'test' or set == 'validation':
         J_regressor = torch.from_numpy(np.load(osp.join(VIBE_DATA_DIR, 'J_regressor_h36m.npy'))).float()
 
+    # iter all frame in sequences
     for i, seq in tqdm(enumerate(sequences)):
 
         data_file = osp.join(folder, 'sequenceFiles', set, seq + '.pkl')
@@ -61,6 +69,7 @@ def read_data(folder, set, debug=False, aug_methods='cut'):
         num_frames = len(data['img_frame_ids'])
         assert (data['poses2d'][0].shape[0] == num_frames)
 
+        # iter all humen in each frame
         for p_id in range(num_people):
             pose = torch.from_numpy(data['poses'][p_id]).float()
             shape = torch.from_numpy(data['betas'][p_id][:10]).float().repeat(pose.size(0), 1)
@@ -84,6 +93,7 @@ def read_data(folder, set, debug=False, aug_methods='cut'):
             j3d = output.joints
 
             if J_regressor is not None:
+                # only test and validation need the j_regressor
                 vertices = output.vertices
                 J_regressor_batch = J_regressor[None, :].expand(vertices.shape[0], -1, -1).to(vertices.device)
                 j3d = torch.matmul(J_regressor_batch, vertices)
