@@ -5,7 +5,9 @@ import torchvision.transforms.functional as F
 
 
 def cut_augmentation(raw_bbox, debug=False):
-
+    """
+    Greate random cutting boounding box from the video segment
+    """
     bbox = raw_bbox.copy()
     nframes, _ = bbox.shape
 
@@ -41,11 +43,14 @@ def cut_augmentation(raw_bbox, debug=False):
 
 
 def create_random_mask(raw_images, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0):
+    """
+    Greate random mask for the video segment from one frame
+    """
     images = raw_images.clone()
     img = images[0]
 
     ##################################################################
-    # STEP 1 - Randomly generate one mask
+    # STEP 1 - Randomly generate one mask from one frame
     ##################################################################
     i, j, h, w, v = random_mask_for_one_image(img, ratio, scale, value)
 
@@ -61,13 +66,22 @@ def create_random_mask(raw_images, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0)
 
 def random_mask_for_one_image(img, ratio, scale, value):
     # Randomly create one mask and apply it to all frames in a video
+
+   
     img_c, img_h, img_w = img.shape[-3], img.shape[-2], img.shape[-1]
     area = img_h * img_w
     log_ratio = torch.log(torch.tensor(ratio))
     for _ in range(10):
+        ##################################################################
+        # STEP 1 - Randomly generate the area to be masked
+        ##################################################################
         erase_area = area * torch.empty(1).uniform_(scale[0], scale[1]).item()
         aspect_ratio = torch.exp(torch.empty(1).uniform_(log_ratio[0], log_ratio[1])).item()
 
+        ##################################################################
+        # STEP 2 - Generate the length and width based on the area until 
+        #  it matches the image size
+        ##################################################################
         h = int(round(math.sqrt(erase_area * aspect_ratio)))
         w = int(round(math.sqrt(erase_area / aspect_ratio)))
         if not (h < img_h and w < img_w):
