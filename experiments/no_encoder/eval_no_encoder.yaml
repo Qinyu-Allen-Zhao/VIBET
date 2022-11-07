@@ -49,9 +49,8 @@ TRAIN:
       DROPOUT: 0.2
 TEST:
   DATASETS:
-#    - 'ThreeDPW'
-#    - 'MPII3D'
-    - 'H36M'
+    - 'ThreeDPW'
+    - 'MPII3D'
 MODEL:
   TEMPORAL_TYPE: 'transformer'
   TF:

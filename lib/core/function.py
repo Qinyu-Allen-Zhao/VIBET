@@ -14,6 +14,14 @@ from lib.utils.utils import move_dict_to_device, AverageMeter
 
 
 def validate(model, device, test_loader):
+    """
+    The function to validate a model
+    :param model: The model to be evaluated
+    :param device: The device to use, CPU or GPU
+    :param test_loader: The dataset loader for testing set
+    :return: The model outputs and the ground truth to evaluate the model
+    """
+
     if device is None:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -77,6 +85,13 @@ def validate(model, device, test_loader):
 
 
 def evaluate(evaluation_accumulators, dataset='ThreeDPW'):
+    """
+    Evaluate the performance measures
+    :param evaluation_accumulators: The model outputs and the
+            ground truth to evaluate the model
+    :param dataset: The testing dataset name
+    :return: The computed performance measures
+    """
     for k, v in evaluation_accumulators.items():
         evaluation_accumulators[k] = np.vstack(v)
 
@@ -140,6 +155,10 @@ def train(data_loaders, generator, motion_discriminator, gen_optimizer, dis_moti
           writer=None, logdir='output', resume=None, performance_type='min',
           num_iters_per_epoch=1000,
           ):
+    """
+    The function to train a model
+    """
+
     logger = logging.getLogger(__name__)
     # Prepare dataloaders
     train_2d_loader, train_3d_loader, disc_motion_loader, valid_loader = data_loaders
@@ -210,7 +229,10 @@ def train_one_epoch(criterion, device, dis_motion_optimizer, dis_motion_update_s
                     disc_motion_loader, end_epoch, epoch, gen_optimizer, generator, logger, motion_discriminator,
                     num_iters_per_epoch, train_2d_iter, train_2d_loader, train_3d_iter, train_3d_loader,
                     train_global_step, writer):
-    # Single epoch training routine
+    """
+    Single epoch training routine
+    """
+
     losses = AverageMeter()
     timer = {
         'data': 0,
@@ -332,6 +354,9 @@ def train_one_epoch(criterion, device, dis_motion_optimizer, dis_motion_update_s
 
 def save_model(performance, epoch, generator, gen_optimizer, motion_discriminator,
                dis_motion_optimizer, is_best, logdir, logger):
+    """
+    The method to save a model
+    """
     save_dict = {
         'epoch': epoch,
         'gen_state_dict': generator.state_dict(),
@@ -353,6 +378,10 @@ def save_model(performance, epoch, generator, gen_optimizer, motion_discriminato
 
 
 def resume_pretrained(model_path, generator, gen_optimizer, motion_discriminator, dis_motion_optimizer, logger):
+    """
+    The function to load a pretrained model
+    """
+
     if osp.isfile(model_path):
         checkpoint = torch.load(model_path)
         start_epoch = checkpoint['epoch']

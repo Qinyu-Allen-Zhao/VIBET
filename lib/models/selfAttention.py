@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
+# This python file is the rewritten version of self-attention in VIBE https://github.com/mkocabas/VIBE
 
 import torch
 from torch import nn
-
 
 def init_weights(m):
     if type(m) == nn.Linear:
@@ -11,6 +10,11 @@ def init_weights(m):
 
 
 class SelfAttention(nn.Module):
+    """
+    The self-attention structure to improve the model's performance
+    This will be used to combine the output from the GRU module
+    """
+
     def __init__(self, attention_size,
                  num_layers=1,
                  dropout=.0,

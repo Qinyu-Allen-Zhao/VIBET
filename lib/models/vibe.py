@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# This python file is the rewritten version of self-attention in VIBE https://github.com/mkocabas/VIBE
 
 import os
 import torch
@@ -10,6 +10,11 @@ from lib.models.spin import Regressor, hmr
 
 
 class TemporalEncoder(nn.Module):
+    """
+    The GRU module in VIBE to extract time-series information and
+    improve the features
+    """
+
     def __init__(
             self,
             n_layers=1,

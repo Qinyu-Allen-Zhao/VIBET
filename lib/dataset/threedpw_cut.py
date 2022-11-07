@@ -2,6 +2,10 @@ from lib.dataset import Dataset3D
 from lib.core.config import THREEDPW_DIR
 
 class ThreeDPWCut(Dataset3D):
+    """
+    The class to leverage the 3DPW dataset with cutting as data augmentation
+    """
+
     def __init__(self, set, seq_len, overlap=0.75, debug=False):
         db_name = '3dpw_cut'
 

@@ -1,60 +1,46 @@
-# VIBE: Video Inference for Human Body Pose and Shape Estimation [CVPR-2020]
-[![report](https://img.shields.io/badge/arxiv-report-red)](https://arxiv.org/abs/1912.05656) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dFfwxZ52MN86FA6uFNypMEdFShd2euQA) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/vibe-video-inference-for-human-body-pose-and/3d-human-pose-estimation-on-3dpw)](https://paperswithcode.com/sota/3d-human-pose-estimation-on-3dpw?p=vibe-video-inference-for-human-body-pose-and)
+# VIBET:  Enhanced Video Inference of Human Body Pose and Shape Estimation with Transformer
 
-<p float="center">
-  <img src="doc/assets/header_1.gif" width="49%" />
-  <img src="doc/assets/header_2.gif" width="49%" />
-</p>
+ENGN8501/COMP8539 - Advanced Topics in Computer Vision - Sem 2 2022
 
-Check our YouTube videos below for more details.
+Group 01: Qinyu Zhao (u7212335), Ruoyu Wu (u7268194), Zitian Zhou (u7367877)
 
-| Paper Video                                                                                                | Qualitative Results                                                                                                |
-|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
-| [![PaperVideo](https://img.youtube.com/vi/rIr-nX63dUA/0.jpg)](https://www.youtube.com/watch?v=rIr-nX63dUA) | [![QualitativeResults](https://img.youtube.com/vi/fW0sIZfQcIs/0.jpg)](https://www.youtube.com/watch?v=fW0sIZfQcIs) |
+Abstract:
 
-<!-- <sub>Sources: left video - [https://www.youtube.com/watch?v=qlPRDVqYO74](https://www.youtube.com/watch?v=qlPRDVqYO74), right video - [https://www.youtube.com/watch?v=Opry3F6aB1I](https://www.youtube.com/watch?v=Opry3F6aB1I)
-</sub> -->
+In this project, we reproduce a paper titled ``**VIBE: Video Inference for Human Body Pose and Shape Estimation**", authored by Muhammed Kocabas (Max Planck Institute for Intelligent Systems) et al, and published in IEEE CVPR 2020. The paper proposes a model called VIBE which exploits adversarial learning to estimate the pose and shape of a human body in a video. In our project, the original model and experiments are reproduced and an enhanced model, VIBET, is proposed. Three improvements are implemented, including (1) boosting the model using synthetic data, (2) using and comparing cutting and erasing to enhance data, and (3) replacing Gated Recurrent Units (GRU) with Transformer. The experimental results show that VIBET outperformed VIBE on two benchmark datasets.
 
-> [**VIBE: Video Inference for Human Body Pose and Shape Estimation**](https://arxiv.org/abs/1912.05656),            
-> [Muhammed Kocabas](https://ps.is.tuebingen.mpg.de/person/mkocabas), [Nikos Athanasiou](https://ps.is.tuebingen.mpg.de/person/nathanasiou), 
-[Michael J. Black](https://ps.is.tuebingen.mpg.de/person/black),        
-> *IEEE Computer Vision and Pattern Recognition, 2020* 
+![figure1_vibe](doc/assets/figure1_vibe.png)
 
-## Features
+<center>Figure 1. The framework of the VIBE model. The red parts are our improvements.</center>
 
-_**V**ideo **I**nference for **B**ody Pose and Shape **E**stimation_ (VIBE) is a video pose and shape estimation method.
-It predicts the parameters of SMPL body model for each frame of an input video. Pleaser refer to our [arXiv report](https://arxiv.org/abs/1912.05656) for further details.
+## What We Did
 
-This implementation:
+| Folder         | File                     | Remark                                                       |
+| -------------- | ------------------------ | ------------------------------------------------------------ |
+| core           | config.py                | Modified to cover more experiments and datasets.             |
+|                | function.py              | Rewritten as practice to reproduce the paper.                |
+|                | loss.py                  | We didn't change but added some comments.                    |
+| data_aug       | augment_utils.py         | Written by us. <br/>For implementing the random mask, we referred to <br/>Zhong, Zhun, et al. "Random erasing data augmentation." Proceedings of the AAAI conference on artificial intelligence. Vol. 34. No. 07. 2020. |
+|                | penn_action_aug.py       | Modified from data_utils/penn_action_utils.py, which was used to augment the PennAction dataset. |
+|                | threedpw_aug.py          | Modified from data_utils/threedpw_utils.py, which was used to augment the 3DPW dataset. |
+| data_synthesis | amass_read_1by1.py       | Modified from data_utils/amass_utils.py, which was used to extract sequence from AMASS per subject. |
+|                | syn_videos_process.py    | Modified from data_utils/penn_action_utils.py, which was used to preprocess the synthetic dataset. |
+|                | synthesis_pipeline       | Modified from SURREAL https://github.com/gulvarol/surreal. You need to copy the files into the orignal repo to run them. |
+| data_utils     | h36m_utils.py            | Modified from data_utils/threedpw_utils.py, which was used to preprocess the Human3.6 dataset. |
+|                | mpii3d_utils_per_sub.py  | The orignal dataset is too big and will cause memory error on our cloud service. We have to use this script to extract them per subject. |
+|                | Other files              | We didn't change but added some comments.                    |
+| dataset        | h36m.py                  | Modified from other classes, which was used to leverage the Human3.6M dataset. |
+|                | XXX_cut.py, XXX_erase.py | The classes modified from other dataset classes, which are used to leverage the augmented datasets. |
+|                | syn_videos.py            | Modified from other classes, which was used to leverage the synthetic dataset. |
+|                | Other files              | We didn't change but added some comments.                    |
+| model          | discriminator.py         | Rewritten as practice to reproduce the paper.                |
+|                | vibe.py                  | Rewritten as practice to reproduce the paper.                |
+|                | selfAttention.py         | Rewritten as practice to reproduce the paper.                |
+|                | vibet.py                 | Written by us.<br />Refs: https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/<br />https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html<br />https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoder.html<br />Shan, Wenkang, et al. "P-STMO: Pre-Trained Spatial Temporal Many-to-One Model for 3D Human Pose Estimation." arXiv preprint arXiv:2203.07628 (2022). |
+| Other          |                          | We didn't change but added some comments.                    |
 
-- has the demo and training code for VIBE implemented purely in PyTorch,
-- can work on arbitrary videos with multiple people,
-- supports both CPU and GPU inference (though GPU is way faster),
-- is fast, up-to 30 FPS on a RTX2080Ti (see [this table](doc/demo.md#runtime-performance)),
-- achieves SOTA results on 3DPW and MPI-INF-3DHP datasets,
-- includes Temporal SMPLify implementation.
-- includes the training code and detailed instruction on how to train it from scratch.
-- can create an FBX/glTF output to be used with major graphics softwares.
+## Get Started
 
-<p float="center">
-  <img src="doc/assets/method_1.gif" width="49%" />
-  <img src="doc/assets/parkour.gif" width="49%" />
-</p>
-
-## Updates
-
-- 05/01/2021: Windows installation tutorial is added thanks to amazing [@carlosedubarreto](https://github.com/carlosedubarreto)
-- 06/10/2020: Support OneEuroFilter smoothing.
-- 14/09/2020: FBX/glTF conversion script is released.
-
-## Getting Started
 VIBE has been implemented and tested on Ubuntu 18.04 with python >= 3.7. It supports both GPU and CPU inference.
-If you don't have a suitable device, try running our Colab demo. 
-
-Clone the repo:
-```bash
-git clone https://github.com/mkocabas/VIBE.git
-```
 
 Install the requirements using `virtualenv` or `conda`:
 ```bash
@@ -65,107 +51,59 @@ source scripts/install_pip.sh
 source scripts/install_conda.sh
 ```
 
-## Running the Demo
-
-We have prepared a nice demo code to run VIBE on arbitrary videos. 
-First, you need download the required data(i.e our trained model and SMPL model parameters). To do this you can just run:
-
-```bash
-source scripts/prepare_data.sh
-```
-
-Then, running the demo is as simple as:
-
-```bash
-# Run on a local video
-python demo.py --vid_file sample_video.mp4 --output_folder output/ --display
-
-# Run on a YouTube video
-python demo.py --vid_file https://www.youtube.com/watch?v=wPZP8Bwxplo --output_folder output/ --display
-```
-
-Refer to [`doc/demo.md`](doc/demo.md) for more details about the demo code.
-
-Sample demo output with the `--sideview` flag:
-
-<p float="left">
-  <img src="doc/assets/sample_video.gif" width="30%" />
-</p>
-
-### FBX and glTF output (New Feature!)
-We provide a script to convert VIBE output to standalone FBX/glTF files to be used in 3D graphics tools like
-Blender, Unity etc. You need to follow steps below to be able to run the conversion script.
-
-- You need to download FBX files for SMPL body model
-    - Go to [SMPL website](https://smpl.is.tue.mpg.de/) and create an account.
-    - Download the Unity-compatible FBX file through the [link](https://psfiles.is.tuebingen.mpg.de/downloads/smpl/SMPL_unity_v-1-0-0-zip)
-    - Unzip the contents and locate them `data/SMPL_unity_v.1.0.0`.
-- Install Blender python API
-    - Note that we tested our script with Blender v2.8.0 and v2.8.3.
-- Run the command below to convert VIBE output to FBX:
-```
-python lib/utils/fbx_output.py \
-    --input output/sample_video/vibe_output.pkl \
-    --output output/sample_video/fbx_output.fbx \ # specify the file extension as *.glb for glTF
-    --fps_source 30 \
-    --fps_target 30 \
-    --gender <male or female> \
-    --person_id <tracklet id from VIBE output>
-
-``` 
-### Windows Installation Tutorial
-
-You can follow the instructions provided by [@carlosedubarreto](https://github.com/carlosedubarreto) to install and run VIBE on a Windows machine:
-
-- VIBE windows installation tutorial: https://youtu.be/3qhs5IRJ1LI
-- FBX conversion: https://youtu.be/w1biKeiQThY
-- Helper github repo: https://github.com/carlosedubarreto/vibe_win_install
-
-## Google Colab
-If you do not have a suitable environment to run this project then you could give Google Colab a try. 
-It allows you to run the project in the cloud, free of charge. You may try our Colab demo using the notebook we have prepared: 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dFfwxZ52MN86FA6uFNypMEdFShd2euQA)
-
+We uploaded the synthetic videos onto Google Drive. You can download them from [here](https://drive.google.com/drive/folders/1iawJEEMreBQJe92UdGlMk4ZNxoN68Ey_?usp=sharing).
 
 ## Training
+
 Run the commands below to start training:
 
 ```shell script
 source scripts/prepare_training_data.sh
-python train.py --cfg configs/config.yaml
+python train.py --cfg experiments/transformer/train_with_tf_8H_2L.yaml
 ```
 
 Note that the training datasets should be downloaded and prepared before running data processing script.
-Please see [`doc/train.md`](doc/train.md) for details on how to prepare them.
- 
+Please see [`doc/train.md`](doc/train.md) for details on how to prepare them. 
+
+We also uploaded the processed dataset onto Google Drive. You can download them by clicking [here](https://drive.google.com/drive/folders/1Fl2mv0XClmNJlayCIN4tFMgx_9p3_IKC?usp=sharing). After that, please put the vibe_db folder under the data folder. Your directory tree should look like this:
+
+```
+${VIBET_ROOT}
+|-- data
+|   |-- vibe_db
+|   |-- vibe_data
+|   `-- ...
+`-- ......
+```
+
 ## Evaluation
 
-Here we compare VIBE with recent state-of-the-art methods on 3D pose estimation datasets. Evaluation metric is
-Procrustes Aligned Mean Per Joint Position Error (PA-MPJPE) in mm.
+Run the commands below to start evaluation:
 
-| Models         | 3DPW &#8595; | MPI-INF-3DHP &#8595; | H36M &#8595; |
-|----------------|:----:|:------------:|:----:|
-| SPIN           | 59.2 |     67.5     | **41.1** |
-| Temporal HMR   | 76.7 |     89.8     | 56.8 |
-| VIBE           | 56.5 |     **63.4**     | 41.5 |
+```shell script
+python eval.py --cfg experiments/transformer/eval_with_tf_8H_2L.yaml
+```
 
-See [`doc/eval.md`](doc/eval.md) to reproduce the results in this table or 
-evaluate a pretrained model.
+We uploaded the model checkpoints and training log files onto Google Drive. To repeat our experimental results, please download them from [here](https://drive.google.com/drive/folders/1T0DMa-i_WsH9N78ZYZ-v5p8bfzjDA0Tr?usp=sharing), and put the result folder under the root folder. Your directory tree should look like this:
 
-**Correction**: Due to a mistake in dataset preprocessing, VIBE trained with 3DPW results in Table 1 of the original paper are not correct.
-Besides, even though training with 3DPW guarantees better quantitative performance, it does not give good 
-qualitative results. ArXiv version will be updated with the corrected results. 
+```
+${VIBET_ROOT}
+|-- doc
+|-- experiments
+|-- lib
+|-- scripts
+|-- results
+`-- ......
+```
 
-## Citation
+## Run Scripts
 
-```bibtex
-@inproceedings{kocabas2019vibe,
-  title={VIBE: Video Inference for Human Body Pose and Shape Estimation},
-  author={Kocabas, Muhammed and Athanasiou, Nikos and Black, Michael J.},
-  booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-  month = {June},
-  year = {2020}
-}
+We provided some scripts to quickly re-run our experiments. Run the following commands
+
+```
+bash ./scripts/run_experiments_reproduce.sh
+bash ./scripts/run_experiments_tf.sh
+bash ./scripts/run_experiments_aug.sh
 ```
 
 ## License
@@ -182,4 +120,5 @@ benefit:
 - Some functions are borrowed from [HMR-pytorch](https://github.com/MandyMo/pytorch_HMR).
 - Some functions are borrowed from [Kornia](https://github.com/kornia/kornia).
 - Pose tracker is from [STAF](https://github.com/soulslicer/openpose/tree/staf).
+- The official repository of [VIBE](https://github.com/mkocabas/VIBE)
 

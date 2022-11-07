@@ -19,6 +19,10 @@ from lib.core.config import PENNACTION_DIR
 
 
 class PennAction(Dataset2D):
+    """
+    The class to leverage the PennAction dataset
+    """
+
     def __init__(self, seq_len, overlap=0.75, debug=False):
         db_name = 'pennaction'
 

@@ -20,6 +20,12 @@ from lib.dataset import *
 
 
 def get_data_loaders(cfg):
+    """
+    The function to load datasets
+    :param cfg: the configuration in the experiment
+    :return: the dataset loaders for training, validation, and testing datasets.
+    """
+
     def get_2d_datasets(dataset_names):
         datasets = []
         for dataset_name in dataset_names:

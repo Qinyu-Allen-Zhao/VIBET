@@ -49,10 +49,9 @@ TRAIN:
       DROPOUT: 0.2
 TEST:
   DATASETS:
-#    - 'ThreeDPW'
-#    - 'MPII3D'
-#    - 'ThreeDPWErase'
-    - 'H36M'
+    - 'ThreeDPW'
+    - 'MPII3D'
+    - 'ThreeDPWErase'
 MODEL:
   TEMPORAL_TYPE: 'gru'
   TGRU:

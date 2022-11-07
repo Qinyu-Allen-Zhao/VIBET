@@ -32,6 +32,10 @@ logger = logging.getLogger(__name__)
 
 
 class Dataset2D(Dataset):
+    """
+    The basic class for datasets of 2D HPE
+    """
+
     def __init__(self, seq_len, overlap=0.,
                  folder=None, dataset_name=None, debug=False):
 

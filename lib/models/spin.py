@@ -1,4 +1,4 @@
-# This script is borrowed and extended from https://github.com/nkolot/SPIN/blob/master/models/hmr.py
+# This python file is borrowed and extended from https://github.com/nkolot/SPIN/blob/master/models/hmr.py
 # Adhere to their licence to use this script
 
 import math
@@ -225,6 +225,11 @@ class HMR(nn.Module):
 
 
 class Regressor(nn.Module):
+    """
+    The regressor to output the smpl parameters and the location of keypoints
+    based on the features extracted by CNN
+    """
+
     def __init__(self, smpl_mean_params=SMPL_MEAN_PARAMS):
         super(Regressor, self).__init__()
 

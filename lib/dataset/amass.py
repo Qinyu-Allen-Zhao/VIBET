@@ -24,6 +24,9 @@ from lib.core.config import VIBE_DB_DIR
 from lib.data_utils.img_utils import split_into_chunks
 
 class AMASS(Dataset):
+    """
+    The class to leverage the AMASS dataset
+    """
     def __init__(self, seq_len):
         self.seq_len = seq_len
 

@@ -2,6 +2,10 @@ from lib.dataset import Dataset3D
 from lib.core.config import H36M_DIR
 
 class H36M(Dataset3D):
+    """
+    The class to leverage the Human3.6M dataset
+    """
+
     def __init__(self, set, seq_len, overlap=0.75, debug=False):
         db_name = 'h36m'
 

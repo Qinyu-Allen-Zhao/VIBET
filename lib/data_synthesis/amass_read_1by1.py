@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 import joblib
 import argparse
@@ -7,11 +5,15 @@ import numpy as np
 import os.path as osp
 from tqdm import tqdm
 
-from lib.core.config import VIBE_DB_DIR
 from lib.data_utils.amass_utils import joints_to_use, all_sequences
 
 
 class AmassReader:
+    """
+    Extract the human motion sequence from AMASS one by one
+    The original reader in VIBE is not designed for extracting that.
+    """
+
     def __init__(self, sequences, output_folder):
         self.idx = 0
         self.sequences = sequences
@@ -30,6 +32,7 @@ class AmassReader:
             actions = [x for x in os.listdir(osp.join(folder, subject)) if x.endswith('.npz')]
 
             for action in actions:
+                # Only read one sequence at a time
                 fname = osp.join(folder, subject, action)
 
                 if fname.endswith('shape.npz'):
@@ -49,6 +52,7 @@ class AmassReader:
                 vid_name = f'{seq_name}_{subject}_{action[:-4]}'
 
                 self.idx += 1
+                # Save each sequence
                 joblib.dump(theta, osp.join(self.output_folder, vid_name))
 
 

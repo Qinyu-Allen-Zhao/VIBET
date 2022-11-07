@@ -20,6 +20,12 @@ sys.path.append('.')
 
 
 def read_data(folder):
+    """
+    Preprecess the synthetic videos.
+    :param folder: the path to the synthetic videos
+    :return: the preprocessed dataset
+    """
+
     dataset = {'img_name': [], 'joints2D': [], 'bbox': [], 'vid_name': [], 'features': [], }
 
     model = spin.get_pretrained_hmr()

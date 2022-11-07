@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# This python file is the rewritten version of motion discriminator in VIBE https://github.com/mkocabas/VIBE
 
 import torch
 import torch.nn as nn
@@ -8,6 +8,11 @@ from lib.models.selfAttention import SelfAttention
 
 
 class Discriminator(nn.Module):
+    """
+    The motion discriminator proposed in the original paper of VIBE
+    It will discriminate whether the given sequence is genereted by
+    the generator or is a real motion sequence.
+    """
 
     def __init__(self,
                  rnn_size,
@@ -51,6 +56,7 @@ class Discriminator(nn.Module):
 
         outputs, state = self.gru(sequence)
 
+        # For comparing concatenation and self-attention
         if self.feature_pool == "concat":
             outputs = F.relu(outputs)
             avg_pool = F.adaptive_avg_pool1d(outputs.permute(1, 2, 0), 1).view(batchsize, -1)
