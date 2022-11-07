@@ -30,6 +30,10 @@ from lib.data_utils.img_utils import normalize_2d_kp, transfrom_keypoints, split
 logger = logging.getLogger(__name__)
 
 class Dataset3D(Dataset):
+    """
+    The basic class for datasets of 3D HPE
+    """
+
     def __init__(self, set, seq_len, overlap=0., folder=None, dataset_name=None, debug=False):
 
         self.folder = folder

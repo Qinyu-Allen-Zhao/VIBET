@@ -1,3 +1,7 @@
+# We modified the original python file mpii3d_utils.py in order to extract dataset per subject.
+# The orignal dataset is too big and will cause memory error on our cloud service.
+# We have to use this script to extract them per subject.
+
 import os
 import cv2
 import glob

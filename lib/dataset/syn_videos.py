@@ -3,6 +3,10 @@ from lib.core.config import SYN_VIDEOS_DIR
 
 
 class SynVideos(Dataset2D):
+    """
+    The class to leverage the synthetic dataset
+    """
+
     def __init__(self, seq_len, overlap=0.75, folder=None, debug=False):
         db_name = 'syn_videos'
         super(SynVideos, self).__init__(

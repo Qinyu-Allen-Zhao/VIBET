@@ -28,6 +28,10 @@ from lib.data_utils.img_utils import normalize_2d_kp, split_into_chunks
 logger = logging.getLogger(__name__)
 
 class Insta(Dataset):
+    """
+    The class to leverage the Insta dataset
+    """
+
     def __init__(self, seq_len, overlap=0., debug=False):
         self.seq_len = seq_len
         self.stride = int(seq_len * (1 - overlap))

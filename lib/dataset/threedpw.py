@@ -18,6 +18,10 @@ from lib.dataset import Dataset3D
 from lib.core.config import THREEDPW_DIR
 
 class ThreeDPW(Dataset3D):
+    """
+    The class to leverage the 3DPW dataset
+    """
+
     def __init__(self, set, seq_len, overlap=0.75, debug=False):
         db_name = '3dpw'
 

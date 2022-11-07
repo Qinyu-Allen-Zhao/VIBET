@@ -5,6 +5,10 @@ from lib.utils.geometry import batch_rodrigues
 
 
 class VIBELoss(nn.Module):
+    """
+    The implementation of loss in VIBE
+    """
+
     def __init__(
             self,
             e_loss_weight=60.,

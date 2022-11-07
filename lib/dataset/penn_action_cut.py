@@ -3,6 +3,10 @@ from lib.core.config import SYN_VIDEOS_DIR
 
 
 class PennActionCut(Dataset2D):
+    """
+    The class to leverage the PennAction dataset with cutting as data augmentation
+    """
+
     def __init__(self, seq_len, overlap=0.75, folder=None, debug=False):
         db_name = 'pennaction_cut'
         super(PennActionCut, self).__init__(

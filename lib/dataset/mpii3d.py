@@ -19,6 +19,10 @@ from lib.core.config import MPII3D_DIR
 
 
 class MPII3D(Dataset3D):
+    """
+    The class to leverage the MPII3D dataset
+    """
+
     def __init__(self, set, seq_len, overlap=0, debug=False):
         db_name = 'mpii3d'
 

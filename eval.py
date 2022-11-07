@@ -1,3 +1,5 @@
+# This python file is the rewritten version of eval.py in VIBE https://github.com/mkocabas/VIBE
+
 import os
 
 import joblib

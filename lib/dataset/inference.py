@@ -26,6 +26,10 @@ from lib.data_utils.img_utils import get_single_image_crop_demo
 
 
 class Inference(Dataset):
+    """
+    The dataset will be used for inference on a new video
+    """
+
     def __init__(self, image_folder, frames, bboxes=None, joints2d=None, scale=1.0, crop_size=224):
         self.image_file_names = [
             osp.join(image_folder, x)
@@ -75,6 +79,10 @@ class Inference(Dataset):
 
 
 class ImageFolder(Dataset):
+    """
+    A class to store image folders.
+    """
+
     def __init__(self, image_folder):
         self.image_file_names = [
             osp.join(image_folder, x)

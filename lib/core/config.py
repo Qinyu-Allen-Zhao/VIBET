@@ -1,3 +1,5 @@
+# This python file is the modified version of config in VIBE https://github.com/mkocabas/VIBE
+
 import argparse
 from yacs.config import CfgNode as CN
 

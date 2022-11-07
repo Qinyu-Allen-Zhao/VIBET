@@ -10,6 +10,12 @@ from lib.models.spin import Regressor, hmr
 
 
 class PositionalEncoding(nn.Module):
+    """
+    The postional encoder to encode the position information before calling the Transformer
+    We referred this: https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/
+    to implement the encoder.
+    """
+
     def __init__(self, d_model, dropout=0.1, max_len=5000):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
@@ -28,6 +34,13 @@ class PositionalEncoding(nn.Module):
 
 
 class TemporalEncoder(nn.Module):
+    """
+    The transformer module to encode temporal information
+    we refereed to the Pytorch official documentation:
+    https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html
+    https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoder.html
+    """
+
     def __init__(
             self,
             seq_len=32,
@@ -56,6 +69,13 @@ class TemporalEncoder(nn.Module):
 
 
 class SpatialEncoder(nn.Module):
+    """
+    Spatial encoder to extract spatial information.
+    We refereed to a paper to implement this, but it's not used in our project
+
+    Ref: Shan, Wenkang, et al. "P-STMO: Pre-Trained Spatial Temporal Many-to-One
+    Model for 3D Human Pose Estimation." arXiv preprint arXiv:2203.07628 (2022).
+    """
     def __init__(
             self,
             input_size=256,
@@ -93,6 +113,11 @@ class SpatialEncoder(nn.Module):
 
 
 class VIBET(nn.Module):
+    """
+    The VIBET model, the model proposed in our project,
+    uses transformer as the temporal encoder.
+    """
+
     def __init__(
             self,
             seq_len,
